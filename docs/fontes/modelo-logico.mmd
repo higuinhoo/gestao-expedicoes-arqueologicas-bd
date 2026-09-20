@@ -1,0 +1,169 @@
+erDiagram
+    INSTITUICAO {
+        INT id_instituicao PK
+        VARCHAR nome UK
+        VARCHAR sigla
+        VARCHAR tipo
+        VARCHAR pais
+        CHAR uf
+        VARCHAR cidade
+    }
+    PESQUISADOR {
+        INT id_pesquisador PK
+        INT id_instituicao FK
+        VARCHAR nome
+        VARCHAR email UK
+        VARCHAR registro_profissional UK
+        VARCHAR tipo_especializacao
+        VARCHAR situacao
+    }
+    ARQUEOLOGO {
+        INT id_pesquisador PK,FK
+        VARCHAR area_pesquisa
+        VARCHAR numero_autorizacao UK
+    }
+    CONSERVADOR {
+        INT id_pesquisador PK,FK
+        VARCHAR especialidade_material
+        VARCHAR numero_registro UK
+    }
+    ANALISTA_LABORATORIAL {
+        INT id_pesquisador PK,FK
+        VARCHAR especialidade_analise
+        VARCHAR nivel_formacao
+    }
+    SITIO_ARQUEOLOGICO {
+        INT id_sitio PK
+        VARCHAR nome UK
+        VARCHAR municipio
+        CHAR uf
+        DECIMAL latitude
+        DECIMAL longitude
+        VARCHAR periodo_historico
+        VARCHAR nivel_protecao
+        DATE data_cadastro
+    }
+    CAMPANHA {
+        INT id_campanha PK
+        INT id_sitio FK
+        INT id_coordenador FK
+        VARCHAR codigo UK
+        VARCHAR nome
+        TEXT objetivo
+        DATE data_inicio
+        DATE data_fim
+        VARCHAR situacao
+        DECIMAL orcamento
+    }
+    PARTICIPACAO_CAMPANHA {
+        INT id_campanha PK,FK
+        INT id_pesquisador PK,FK
+        VARCHAR funcao
+        DATE data_entrada
+        DATE data_saida
+        SMALLINT horas_previstas
+    }
+    UNIDADE_ESCAVACAO {
+        INT id_unidade PK
+        INT id_campanha FK
+        VARCHAR codigo UK
+        VARCHAR setor
+        VARCHAR nivel_estratigrafico
+        DATE data_abertura
+        DATE data_encerramento
+    }
+    ARTEFATO {
+        INT id_artefato PK
+        INT id_unidade FK
+        INT id_artefato_referencia FK
+        VARCHAR codigo_catalogo UK
+        VARCHAR nome
+        TEXT descricao
+        VARCHAR material
+        VARCHAR periodo_estimado
+        DATE data_descoberta
+        DECIMAL profundidade_cm
+        VARCHAR estado_conservacao
+        VARCHAR situacao
+    }
+    FRAGMENTO {
+        INT id_artefato PK,FK
+        SMALLINT numero_fragmento PK
+        DECIMAL peso_g
+        DECIMAL comprimento_mm
+        VARCHAR descricao
+        BOOLEAN localizado
+    }
+    ANALISE_LABORATORIAL {
+        INT id_analise PK
+        INT id_laboratorio FK
+        VARCHAR tipo_analise
+        VARCHAR metodo
+        DATE data_inicio
+        DATE data_fim
+        VARCHAR situacao
+        DECIMAL custo
+    }
+    ARTEFATO_ANALISE {
+        INT id_artefato PK,FK
+        INT id_analise PK,FK
+        VARCHAR codigo_amostra UK
+        DECIMAL massa_consumida_g
+        VARCHAR resultado_resumido
+        TEXT conclusao
+    }
+    INTERVENCAO_CONSERVACAO {
+        INT id_intervencao PK
+        INT id_artefato FK
+        INT id_conservador FK
+        VARCHAR tipo_intervencao
+        DATE data_inicio
+        DATE data_fim
+        TEXT descricao
+        VARCHAR material_aplicado
+        VARCHAR situacao
+        DECIMAL custo
+    }
+    LOCAL_ARMAZENAMENTO {
+        INT id_local PK
+        INT id_instituicao FK
+        VARCHAR codigo UK
+        VARCHAR tipo
+        DECIMAL temperatura_c
+        DECIMAL umidade_percentual
+        INT capacidade
+    }
+    CUSTODIA_ARTEFATO {
+        INT id_custodia PK
+        INT id_artefato FK
+        INT id_instituicao FK
+        INT id_local FK
+        INT id_responsavel FK
+        DATE data_inicio
+        DATE data_fim
+        VARCHAR documento_movimentacao UK
+        VARCHAR motivo
+        INT_GERADO id_artefato_em_aberto UK
+    }
+    INSTITUICAO ||--o{ PESQUISADOR : vincula
+    PESQUISADOR ||--o| ARQUEOLOGO : "ISA total exclusiva"
+    PESQUISADOR ||--o| CONSERVADOR : "ISA total exclusiva"
+    PESQUISADOR ||--o| ANALISTA_LABORATORIAL : "ISA total exclusiva"
+    SITIO_ARQUEOLOGICO ||--o{ CAMPANHA : recebe
+    PESQUISADOR ||--o{ CAMPANHA : coordena
+    CAMPANHA ||--o{ PARTICIPACAO_CAMPANHA : possui
+    PESQUISADOR ||--o{ PARTICIPACAO_CAMPANHA : integra
+    CAMPANHA ||--|{ UNIDADE_ESCAVACAO : divide_se
+    UNIDADE_ESCAVACAO ||--o{ ARTEFATO : revela
+    ARTEFATO o|--o{ ARTEFATO : referencia
+    ARTEFATO ||--|{ FRAGMENTO : compoe
+    INSTITUICAO ||--o{ ANALISE_LABORATORIAL : executa
+    ARTEFATO ||--o{ ARTEFATO_ANALISE : participa
+    ANALISE_LABORATORIAL ||--o{ ARTEFATO_ANALISE : examina
+    ARTEFATO ||--o{ INTERVENCAO_CONSERVACAO : recebe
+    CONSERVADOR ||--o{ INTERVENCAO_CONSERVACAO : realiza
+    INSTITUICAO ||--o{ LOCAL_ARMAZENAMENTO : possui
+    ARTEFATO ||--o{ CUSTODIA_ARTEFATO : historico
+    INSTITUICAO ||--o{ CUSTODIA_ARTEFATO : assume
+    LOCAL_ARMAZENAMENTO o|--o{ CUSTODIA_ARTEFATO : abriga
+    PESQUISADOR ||--o{ CUSTODIA_ARTEFATO : responde

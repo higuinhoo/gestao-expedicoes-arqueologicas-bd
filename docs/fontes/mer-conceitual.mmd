@@ -1,0 +1,123 @@
+%% Modelo conceitual completo em notação de Engenharia da Informação.
+%% Especialização de PESQUISADOR: TOTAL e EXCLUSIVA (T, X).
+erDiagram
+    INSTITUICAO {
+        int id_instituicao PK
+        string nome
+        string tipo
+        string cidade
+    }
+    PESQUISADOR {
+        int id_pesquisador PK
+        string nome
+        string email
+        string tipo_especializacao
+        string situacao
+    }
+    ARQUEOLOGO {
+        int id_pesquisador PK
+        string area_pesquisa
+        string numero_autorizacao
+    }
+    CONSERVADOR {
+        int id_pesquisador PK
+        string especialidade_material
+        string numero_registro
+    }
+    ANALISTA_LABORATORIAL {
+        int id_pesquisador PK
+        string especialidade_analise
+        string nivel_formacao
+    }
+    SITIO_ARQUEOLOGICO {
+        int id_sitio PK
+        string nome
+        string localizacao
+        string nivel_protecao
+    }
+    CAMPANHA {
+        int id_campanha PK
+        string codigo
+        string periodo
+        string situacao
+    }
+    PARTICIPACAO_CAMPANHA {
+        int id_campanha PK
+        int id_pesquisador PK
+        string funcao
+        string periodo
+        int horas_previstas
+    }
+    UNIDADE_ESCAVACAO {
+        int id_unidade PK
+        string codigo
+        string setor
+        string nivel_estratigrafico
+    }
+    ARTEFATO {
+        int id_artefato PK
+        string codigo_catalogo
+        string material
+        string estado_conservacao
+        string situacao
+    }
+    FRAGMENTO {
+        int id_artefato PK
+        int numero_fragmento PK
+        decimal peso_g
+        boolean localizado
+    }
+    ANALISE_LABORATORIAL {
+        int id_analise PK
+        string tipo_analise
+        string metodo
+        string periodo
+    }
+    ARTEFATO_ANALISE {
+        int id_artefato PK
+        int id_analise PK
+        string codigo_amostra
+        decimal massa_consumida_g
+        string resultado
+    }
+    INTERVENCAO_CONSERVACAO {
+        int id_intervencao PK
+        string tipo_intervencao
+        string periodo
+        decimal custo
+    }
+    LOCAL_ARMAZENAMENTO {
+        int id_local PK
+        string codigo
+        string tipo
+        decimal temperatura_c
+        decimal umidade_percentual
+    }
+    CUSTODIA_ARTEFATO {
+        int id_custodia PK
+        string periodo
+        string documento_movimentacao
+        string motivo
+    }
+    INSTITUICAO ||--o{ PESQUISADOR : vincula
+    PESQUISADOR ||--o| ARQUEOLOGO : "ISA total exclusiva"
+    PESQUISADOR ||--o| CONSERVADOR : "ISA total exclusiva"
+    PESQUISADOR ||--o| ANALISTA_LABORATORIAL : "ISA total exclusiva"
+    SITIO_ARQUEOLOGICO ||--o{ CAMPANHA : recebe
+    PESQUISADOR ||--o{ CAMPANHA : coordena
+    CAMPANHA ||--o{ PARTICIPACAO_CAMPANHA : possui
+    PESQUISADOR ||--o{ PARTICIPACAO_CAMPANHA : integra
+    CAMPANHA ||--|{ UNIDADE_ESCAVACAO : divide_se
+    UNIDADE_ESCAVACAO ||--o{ ARTEFATO : revela
+    ARTEFATO o|--o{ ARTEFATO : referencia
+    ARTEFATO ||--|{ FRAGMENTO : compoe
+    INSTITUICAO ||--o{ ANALISE_LABORATORIAL : executa
+    ARTEFATO ||--o{ ARTEFATO_ANALISE : participa
+    ANALISE_LABORATORIAL ||--o{ ARTEFATO_ANALISE : examina
+    ARTEFATO ||--o{ INTERVENCAO_CONSERVACAO : recebe
+    CONSERVADOR ||--o{ INTERVENCAO_CONSERVACAO : realiza
+    INSTITUICAO ||--o{ LOCAL_ARMAZENAMENTO : possui
+    ARTEFATO ||--o{ CUSTODIA_ARTEFATO : historico
+    INSTITUICAO ||--o{ CUSTODIA_ARTEFATO : assume
+    LOCAL_ARMAZENAMENTO o|--o{ CUSTODIA_ARTEFATO : abriga
+    PESQUISADOR ||--o{ CUSTODIA_ARTEFATO : responde

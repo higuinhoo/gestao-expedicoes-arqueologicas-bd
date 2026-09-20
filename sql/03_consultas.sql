@@ -1,6 +1,6 @@
 -- ============================================================
 -- 03_consultas.sql
--- 15 consultas, cada uma com a pergunta que ela responde
+-- Quinze consultas de verificação comentadas por pergunta de negócio
 -- ============================================================
 
 USE arqueologia_ucb;
@@ -154,10 +154,9 @@ LEFT JOIN local_armazenamento AS l ON l.id_local = co.id_local
 WHERE co.posicao = 1
 ORDER BY a.codigo_catalogo;
 
--- 15) Tem alguma violação de regra que o banco sozinho não consegue bloquear?
--- Verifica: coordenador que não é arqueólogo, análise feita por instituição que não é laboratório,
--- intervenção feita por alguém que não é conservador, local de custódia de outra instituição
--- e pesquisador participando de campanha mesmo estando inativo.
+-- 15) Quais registros violam regras semânticas que dependem de mais de uma tabela?
+-- A consulta reúne coordenadores não arqueólogos, laboratórios com tipo incorreto,
+-- conservadores incompatíveis e locais de custódia pertencentes a outra instituição.
 SELECT 'COORDENADOR_NAO_ARQUEOLOGO' AS problema,
        c.codigo AS referencia, p.nome AS detalhe
 FROM campanha AS c

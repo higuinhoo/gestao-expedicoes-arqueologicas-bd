@@ -1,7 +1,7 @@
 -- ============================================================
 -- 01_ddl.sql
 -- Sistema de Gestão de Expedições Arqueológicas
--- MySQL 8.x / InnoDB
+-- Dialeto: MySQL 8.x / InnoDB
 -- ============================================================
 
 CREATE DATABASE IF NOT EXISTS arqueologia_ucb
@@ -10,18 +10,18 @@ CREATE DATABASE IF NOT EXISTS arqueologia_ucb
 
 USE arqueologia_ucb;
 
--- Onde cada regra de negócio aparece no banco:
--- RN01: instituicao — nome único e tipo restrito a UNIVERSIDADE, MUSEU, LABORATORIO, ORGAO_PUBLICO
--- RN02-RN04: pesquisador e subtipos — FK de instituição, e-mail único, discriminador e situação
--- RN05: sitio_arqueologico — campos obrigatórios e limites de latitude/longitude
--- RN06-RN09: campanha e participacao_campanha — código único, datas, coordenação e N:N com atributos
--- RN10-RN12: unidade_escavacao — código único por campanha, período e vínculo obrigatório
--- RN13-RN15: artefato — catálogo único, unidade de descoberta e autorreferência bloqueada por trigger
--- RN16: fragmento — entidade fraca, identificada pela combinação (id_artefato, numero_fragmento)
--- RN17-RN19: analise_laboratorial e artefato_analise — laboratório, período e N:N com atributos
--- RN20-RN21: intervencao_conservacao — conservador, período, situação e custo
--- RN22: local_armazenamento — código único por instituição
--- RN23-RN25: custodia_artefato — histórico datado, documento único e uma só custódia em aberto por artefato
+-- Rastreabilidade das regras de negócio no esquema físico
+-- RN01: instituicao - uq_instituicao_nome e ck_instituicao_tipo.
+-- RN02-RN04: pesquisador e subtipos - FKs, unicidades e domínios de especialização/situação.
+-- RN05: sitio_arqueologico - obrigatoriedade e limites de latitude/longitude.
+-- RN06-RN09: campanha e participacao_campanha - código único, períodos, coordenação e associação N:N.
+-- RN10-RN12: unidade_escavacao - código composto único, período e vínculo obrigatório à campanha.
+-- RN13-RN15: artefato - catálogo único, contexto de descoberta e autorreferência protegida por triggers.
+-- RN16: fragmento - entidade fraca identificada por (id_artefato, numero_fragmento).
+-- RN17-RN19: analise_laboratorial e artefato_analise - laboratório, período e associação N:N.
+-- RN20-RN21: intervencao_conservacao - conservador, período, situação e custo.
+-- RN22: local_armazenamento - identificação única dentro da instituição.
+-- RN23-RN25: custodia_artefato - histórico datado, documento único e uma única custódia vigente.
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS custodia_artefato;

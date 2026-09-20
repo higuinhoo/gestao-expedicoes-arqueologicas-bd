@@ -1,6 +1,6 @@
 # Sistema de Gestão de Expedições Arqueológicas
 
-Projeto final da disciplina Laboratório de Banco de Dados — 2026/2.
+Projeto da Etapa 1 da disciplina Laboratório de Banco de Dados, semestre 2026/2.
 
 ## Integrantes
 
@@ -9,19 +9,19 @@ Projeto final da disciplina Laboratório de Banco de Dados — 2026/2.
 - Igor Vendramini Perini
 - João Gabriel da Cruz Viana
 
-## Sobre o projeto
+## Domínio
 
-O banco controla expedições arqueológicas do começo ao fim: sítios, campanhas, equipes, unidades de escavação, artefatos encontrados, fragmentos, análises em laboratório, intervenções de conservação e quem está responsável pelo artefato em cada momento. Os dados da carga são fictícios.
+O sistema registra expedições arqueológicas, unidades de escavação, artefatos, fragmentos, análises laboratoriais, intervenções de conservação e a cadeia temporal de custódia. Todos os dados da carga são fictícios.
 
 ## Requisitos
 
 - MySQL 8.0 ou superior
 - Engine InnoDB
-- Charset utf8mb4
+- Conjunto de caracteres utf8mb4
 
-## Como rodar
+## Execução
 
-Execute os três scripts nessa ordem dentro do MySQL:
+Execute os arquivos nesta ordem em uma instância MySQL 8:
 
 ```sql
 SOURCE sql/01_ddl.sql;
@@ -29,24 +29,27 @@ SOURCE sql/02_carga.sql;
 SOURCE sql/03_consultas.sql;
 ```
 
-O `01_ddl.sql` já dropa e recria tudo, então pode rodar de novo sem problema. O `02_carga.sql` termina mostrando a contagem de registros em cada tabela.
+O script `01_ddl.sql` pode ser executado novamente: ele remove as tabelas do projeto em ordem segura e recria o esquema. O script `02_carga.sql` cria dados sintéticos e encerra a carga com consultas de contagem.
 
-## Testado em
+## Compatibilidade verificada
 
-MySQL Community Server 8.4.11 — rodou sem erros do zero. Ficaram 16 tabelas, 22 chaves estrangeiras, 28 CHECKs e 2 triggers. Todas as 15 consultas retornaram resultado.
+Os três scripts foram executados integralmente e em sequência no MySQL Community Server 8.4.11. A validação confirmou 16 tabelas, 22 chaves estrangeiras, 28 restrições `CHECK`, 2 triggers, as quantidades previstas da carga e a execução sem erros das quinze consultas.
 
-## Arquivos
+## Estrutura
 
-```
-sql/
-  01_ddl.sql          criação do banco
-  02_carga.sql        dados de exemplo
-  03_consultas.sql    15 consultas comentadas
+- `docs/relatorio-etapa1.pdf`: escopo, regras, modelos e normalização.
+- `docs/mer-conceitual.pdf`: modelo conceitual em notação de Engenharia da Informação.
+- `docs/modelo-logico.pdf`: esquema relacional com chaves.
+- `docs/dicionario-dados.pdf`: descrição de tabelas e atributos.
+- `docs/fontes/`: fontes editáveis dos diagramas e versões DOCX.
+- `sql/01_ddl.sql`: criação completa do banco.
+- `sql/02_carga.sql`: carga de dados fictícios.
+- `sql/03_consultas.sql`: quinze consultas comentadas.
 
-docs/
-  relatorio-etapa1.pdf   relatório completo
-  mer-conceitual.pdf     modelo entidade-relacionamento
-  modelo-logico.pdf      esquema relacional
-  dicionario-dados.pdf   descrição de cada tabela e atributo
-  fontes/                versões editáveis (Markdown e Mermaid)
-```
+## Verificação antes da entrega
+
+1. Executar o DDL em uma instância MySQL 8 limpa.
+2. Executar a carga e conferir as contagens.
+3. Executar as quinze consultas e inspecionar os resultados.
+4. Ler o relatório e confirmar que todos os integrantes conseguem explicar as decisões.
+5. Registrar no relatório como a equipe validou o material produzido com apoio de IA.

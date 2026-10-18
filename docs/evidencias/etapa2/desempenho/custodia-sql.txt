@@ -1,0 +1,5 @@
+        SELECT codigo_catalogo,nome,material,estado_conservacao,situacao,
+        instituicao,local_armazenamento,data_inicio
+        FROM vw_relatorio_custodia ORDER BY instituicao,codigo_catalogo
+
+Parâmetros: []

@@ -12,7 +12,8 @@ USE arqueologia_ucb;
 
 -- Rastreabilidade das regras de negócio no esquema físico
 -- RN01: instituicao - uq_instituicao_nome e ck_instituicao_tipo.
--- RN02-RN04: pesquisador e subtipos - FKs, unicidades e domínios; RN03/RN04 permanecem verificadas na consulta 15.
+-- RN02-RN04: pesquisador/subtipos; RN03 é auditada na consulta 15 e coordenada pela aplicação.
+-- RN04: o bloqueio operacional de novas participações está em 04_operacao.sql.
 -- RN05: sitio_arqueologico - obrigatoriedade e limites de latitude/longitude.
 -- RN06-RN09: campanha - código único, períodos e triggers de coordenador arqueólogo.
 -- RN10-RN11: participacao_campanha - associação N:N, períodos e horas.

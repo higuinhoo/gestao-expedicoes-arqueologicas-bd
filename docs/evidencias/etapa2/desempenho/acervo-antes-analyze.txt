@@ -1,0 +1,8 @@
+-> Sort: vw_acervo_consulta.estado_conservacao  (actual time=2.53..2.53 rows=2 loops=1)
+    -> Table scan on <temporary>  (actual time=2.5..2.5 rows=2 loops=1)
+        -> Aggregate using temporary table  (actual time=2.5..2.5 rows=2 loops=1)
+            -> Nested loop inner join  (cost=176 rows=9.37) (actual time=0.208..2.3 rows=93 loops=1)
+                -> Filter: (u.id_campanha = '1')  (cost=0.45 rows=2) (actual time=0.0196..0.0208 rows=2 loops=1)
+                    -> Covering index lookup on u using idx_unidade_campanha (id_campanha=1)  (cost=0.45 rows=2) (actual time=0.0124..0.0132 rows=2 loops=1)
+                -> Filter: ((a.material = 'Cerâmica') and (a.data_descoberta between '2025-01-01' and '2027-12-31'))  (cost=63 rows=4.69) (actual time=0.188..1.12 rows=46.5 loops=2)
+                    -> Index lookup on a using idx_artefato_unidade (id_unidade=u.id_unidade)  (cost=63 rows=251) (actual time=0.0908..1.1 rows=256 loops=2)

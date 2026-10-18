@@ -1,0 +1,1 @@
+[{tabela=artefato, registros=20108}, {tabela=analise_laboratorial, registros=20045}, {tabela=artefato_analise, registros=40100}, {tabela=custodia_artefato, registros=100131}]

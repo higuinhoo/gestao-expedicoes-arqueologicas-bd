@@ -1,0 +1,138 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {
+      "query_cost": "38255.75"
+    },
+    "ordering_operation": {
+      "using_temporary_table": true,
+      "using_filesort": true,
+      "nested_loop": [
+        {
+          "table": {
+            "table_name": "a",
+            "access_type": "ALL",
+            "rows_examined_per_scan": 20105,
+            "rows_produced_per_join": 20105,
+            "filtered": "100.00",
+            "cost_info": {
+              "read_cost": "56.25",
+              "eval_cost": "2010.50",
+              "prefix_cost": "2066.75",
+              "data_read_per_join": "27M"
+            },
+            "used_columns": [
+              "id_artefato",
+              "codigo_catalogo",
+              "nome",
+              "material",
+              "estado_conservacao",
+              "situacao"
+            ]
+          }
+        },
+        {
+          "table": {
+            "table_name": "ca",
+            "access_type": "ref",
+            "possible_keys": [
+              "uq_custodia_inicio",
+              "idx_custodia_artefato_periodo",
+              "idx_custodia_vigencia_instituicao",
+              "idx_perf_custodia_atual"
+            ],
+            "key": "idx_perf_custodia_atual",
+            "used_key_parts": [
+              "id_artefato",
+              "data_fim"
+            ],
+            "key_length": "8",
+            "ref": [
+              "arqueologia_ucb.a.id_artefato",
+              "const"
+            ],
+            "rows_examined_per_scan": 1,
+            "rows_produced_per_join": 20105,
+            "filtered": "100.00",
+            "using_index": true,
+            "cost_info": {
+              "read_cost": "20105.00",
+              "eval_cost": "2010.50",
+              "prefix_cost": "24182.25",
+              "data_read_per_join": "19M"
+            },
+            "used_columns": [
+              "id_custodia",
+              "id_artefato",
+              "id_instituicao",
+              "id_local",
+              "data_inicio",
+              "data_fim"
+            ],
+            "attached_condition": "<if>(is_not_null_compl(ca), (`arqueologia_ucb`.`ca`.`data_fim` is null), true)"
+          }
+        },
+        {
+          "table": {
+            "table_name": "i",
+            "access_type": "eq_ref",
+            "possible_keys": [
+              "PRIMARY"
+            ],
+            "key": "PRIMARY",
+            "used_key_parts": [
+              "id_instituicao"
+            ],
+            "key_length": "4",
+            "ref": [
+              "arqueologia_ucb.ca.id_instituicao"
+            ],
+            "rows_examined_per_scan": 1,
+            "rows_produced_per_join": 20105,
+            "filtered": "100.00",
+            "cost_info": {
+              "read_cost": "5026.25",
+              "eval_cost": "2010.50",
+              "prefix_cost": "31219.00",
+              "data_read_per_join": "23M"
+            },
+            "used_columns": [
+              "id_instituicao",
+              "nome"
+            ]
+          }
+        },
+        {
+          "table": {
+            "table_name": "l",
+            "access_type": "eq_ref",
+            "possible_keys": [
+              "PRIMARY"
+            ],
+            "key": "PRIMARY",
+            "used_key_parts": [
+              "id_local"
+            ],
+            "key_length": "4",
+            "ref": [
+              "arqueologia_ucb.ca.id_local"
+            ],
+            "rows_examined_per_scan": 1,
+            "rows_produced_per_join": 20105,
+            "filtered": "100.00",
+            "cost_info": {
+              "read_cost": "5026.25",
+              "eval_cost": "2010.50",
+              "prefix_cost": "38255.75",
+              "data_read_per_join": "4M"
+            },
+            "used_columns": [
+              "id_local",
+              "codigo"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

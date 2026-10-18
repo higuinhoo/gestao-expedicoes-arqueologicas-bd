@@ -1,0 +1,149 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {
+      "query_cost": "176.28"
+    },
+    "ordering_operation": {
+      "using_filesort": false,
+      "grouping_operation": {
+        "using_temporary_table": true,
+        "using_filesort": true,
+        "nested_loop": [
+          {
+            "table": {
+              "table_name": "c",
+              "access_type": "const",
+              "possible_keys": [
+                "PRIMARY",
+                "idx_campanha_sitio"
+              ],
+              "key": "PRIMARY",
+              "used_key_parts": [
+                "id_campanha"
+              ],
+              "key_length": "4",
+              "ref": [
+                "const"
+              ],
+              "rows_examined_per_scan": 1,
+              "rows_produced_per_join": 1,
+              "filtered": "100.00",
+              "cost_info": {
+                "read_cost": "0.00",
+                "eval_cost": "0.10",
+                "prefix_cost": "0.00",
+                "data_read_per_join": "760"
+              },
+              "used_columns": [
+                "id_campanha",
+                "id_sitio",
+                "codigo"
+              ]
+            }
+          },
+          {
+            "table": {
+              "table_name": "s",
+              "access_type": "const",
+              "possible_keys": [
+                "PRIMARY"
+              ],
+              "key": "PRIMARY",
+              "used_key_parts": [
+                "id_sitio"
+              ],
+              "key_length": "4",
+              "ref": [
+                "const"
+              ],
+              "rows_examined_per_scan": 1,
+              "rows_produced_per_join": 1,
+              "filtered": "100.00",
+              "cost_info": {
+                "read_cost": "0.00",
+                "eval_cost": "0.10",
+                "prefix_cost": "0.00",
+                "data_read_per_join": "1K"
+              },
+              "used_columns": [
+                "id_sitio",
+                "nome"
+              ]
+            }
+          },
+          {
+            "table": {
+              "table_name": "u",
+              "access_type": "ref",
+              "possible_keys": [
+                "PRIMARY",
+                "uq_unidade_codigo",
+                "idx_unidade_campanha"
+              ],
+              "key": "idx_unidade_campanha",
+              "used_key_parts": [
+                "id_campanha"
+              ],
+              "key_length": "4",
+              "ref": [
+                "const"
+              ],
+              "rows_examined_per_scan": 2,
+              "rows_produced_per_join": 2,
+              "filtered": "100.00",
+              "using_index": true,
+              "cost_info": {
+                "read_cost": "0.25",
+                "eval_cost": "0.20",
+                "prefix_cost": "0.45",
+                "data_read_per_join": "848"
+              },
+              "used_columns": [
+                "id_unidade",
+                "id_campanha"
+              ],
+              "attached_condition": "(`arqueologia_ucb`.`u`.`id_campanha` = '1')"
+            }
+          },
+          {
+            "table": {
+              "table_name": "a",
+              "access_type": "ref",
+              "possible_keys": [
+                "idx_artefato_unidade",
+                "idx_artefato_material_estado"
+              ],
+              "key": "idx_artefato_unidade",
+              "used_key_parts": [
+                "id_unidade"
+              ],
+              "key_length": "4",
+              "ref": [
+                "arqueologia_ucb.u.id_unidade"
+              ],
+              "rows_examined_per_scan": 251,
+              "rows_produced_per_join": 9,
+              "filtered": "1.87",
+              "cost_info": {
+                "read_cost": "125.59",
+                "eval_cost": "0.94",
+                "prefix_cost": "176.28",
+                "data_read_per_join": "13K"
+              },
+              "used_columns": [
+                "id_artefato",
+                "id_unidade",
+                "material",
+                "data_descoberta",
+                "profundidade_cm",
+                "estado_conservacao"
+              ],
+              "attached_condition": "((`arqueologia_ucb`.`a`.`material` = 'Cerâmica') and (`arqueologia_ucb`.`a`.`data_descoberta` between '2025-01-01' and '2027-12-31'))"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

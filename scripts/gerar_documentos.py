@@ -6,7 +6,7 @@ Uso: python scripts/gerar_modelos.py && python scripts/gerar_documentos.py
 from pathlib import Path
 import io,json,html,re,subprocess
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate,Paragraph,Spacer,LongTable,TableStyle,Preformatted
+from reportlab.platypus import SimpleDocTemplate,Paragraph,Spacer,LongTable,TableStyle,Preformatted,Image
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -69,7 +69,15 @@ def flow(blocks):
  for b in blocks:
   t=b['t'];c=b.get('c')
   if t=='Header':story.append(Paragraph(inline(c[2]),STYLES['title' if c[0]==1 else 'h2' if c[0]==2 else 'h3']))
-  elif t in ('Para','Plain'):story.append(Paragraph(inline(c),STYLES['body']))
+  elif t in ('Para','Plain'):
+   pictures=[item for item in c if item['t']=='Image']
+   if pictures:
+    for item in pictures:
+     path=(ROOT/item['c'][2][0]).resolve();path.relative_to(ROOT)
+     picture=Image(str(path));factor=min(WIDTH/picture.imageWidth,330/picture.imageHeight)
+     picture.drawWidth=picture.imageWidth*factor;picture.drawHeight=picture.imageHeight*factor
+     story.extend([picture,Spacer(1,7),Paragraph(inline(item['c'][1]),STYLES['body'])])
+   else:story.append(Paragraph(inline(c),STYLES['body']))
   elif t=='BulletList':
    for item in c:story.append(Paragraph('• '+block_inline(item),STYLES['bullet']))
   elif t=='OrderedList':
@@ -90,24 +98,29 @@ def render_piece(markdown):
 
 def generate(source,target,title):
  text=source.read_text();writer=PdfWriter()
- for chunk in re.split(r'(\[INSERIR_(?:MER|LOGICO)\])',text):
+ inserts={'[INSERIR_MER]':'mer-conceitual.pdf','[INSERIR_LOGICO]':'modelo-logico.pdf','[INSERIR_ETAPA1]':'relatorio-etapa1.pdf','[INSERIR_TECNICO]':'adendo-tecnico-etapa2.pdf'}
+ for chunk in re.split(r'(\[INSERIR_(?:MER|LOGICO|ETAPA1|TECNICO)\])',text):
   if not chunk.strip():continue
-  if chunk.strip() in ['[INSERIR_MER]','[INSERIR_LOGICO]']:
-   filename='mer-conceitual.pdf' if 'MER]' in chunk else 'modelo-logico.pdf'
+  if chunk.strip() in inserts:
+   filename=inserts[chunk.strip()]
    reader=PdfReader(ROOT/'docs'/filename)
   else:reader=render_piece(chunk)
   for p in reader.pages:writer.add_page(p)
  total=len(writer.pages)
  for i,page in enumerate(writer.pages,1):
   w,h=float(page.mediabox.width),float(page.mediabox.height)
-  overlay=io.BytesIO();c=canvas.Canvas(overlay,pagesize=(w,h));c.setStrokeColor(colors.HexColor('#cbd5e1'));c.line(44,36,w-44,36)
+  overlay=io.BytesIO();c=canvas.Canvas(overlay,pagesize=(w,h));c.setFillColor(colors.white);c.rect(0,0,w,40,fill=1,stroke=0);c.setStrokeColor(colors.HexColor('#cbd5e1'));c.line(44,36,w-44,36)
   c.setFont('DV',9 if w<1000 else 12);c.setFillColor(colors.HexColor('#475569'))
-  c.drawString(44,22,'Laboratório de Banco de Dados | Etapa 1 revisada | 18/10/2026')
+  c.drawString(44,22,'Laboratório de Banco de Dados | '+('Relatório final' if 'final' in source.name else 'Etapa 1 revisada')+' | 18/10/2026')
   c.drawRightString(w-44,22,f'Página {i} de {total}');c.save();overlay.seek(0)
   page.merge_page(PdfReader(overlay).pages[0])
- writer.add_metadata({'/Title':title,'/Author':'Arthur Tavares Silva; Higor Samuel Ferreira Silva; Igor Vendramini Perini; João Gabriel da Cruz Viana','/Subject':'Revisão C1–C5 da devolutiva da Etapa 1'})
+ writer.add_metadata({'/Title':title,'/Author':'Arthur Tavares Silva; Higor Samuel Ferreira Silva; Igor Vendramini Perini; João Gabriel da Cruz Viana','/Subject':('Etapa 2 B1–B8 e revisão C1–C5 da Etapa 1' if 'final' in source.name else 'Revisão C1–C5 da devolutiva da Etapa 1')})
  writer.write(target);print(target.relative_to(ROOT),total,'páginas')
 
 if __name__=='__main__':
+ import sys
+ if '--final' in sys.argv:
+  generate(ROOT/'docs/fontes/relatorio-final.md',ROOT/'docs/relatorio-final.pdf','Gestão de Expedições Arqueológicas — Relatório final')
+  raise SystemExit(0)
  generate(ROOT/'docs/fontes/relatorio-etapa1.md',ROOT/'docs/relatorio-etapa1.pdf','Gestão de Expedições Arqueológicas — Etapa 1 revisada')
  generate(ROOT/'docs/fontes/dicionario-dados.md',ROOT/'docs/dicionario-dados.pdf','Dicionário de dados — Gestão de Expedições Arqueológicas')

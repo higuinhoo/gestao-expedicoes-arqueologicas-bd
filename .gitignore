@@ -4,3 +4,8 @@ CHECKLIST_ENTREGA.md
 __pycache__/
 *.py[cod]
 .venv/
+app/target/
+app/config.properties
+local/
+*.log
+backups/

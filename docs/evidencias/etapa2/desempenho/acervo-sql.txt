@@ -1,0 +1,9 @@
+        SELECT campanha,sitio,material,estado_conservacao,COUNT(*) AS quantidade,
+        ROUND(AVG(profundidade_cm),2) AS profundidade_media_cm
+        FROM vw_acervo_consulta
+        WHERE (? IS NULL OR id_campanha=?) AND (?='' OR material=?)
+        AND data_descoberta BETWEEN ? AND ?
+        GROUP BY campanha,sitio,material,estado_conservacao
+        ORDER BY campanha,material,estado_conservacao
+
+Parâmetros: [1, 1, Cerâmica, Cerâmica, 2025-01-01, 2027-12-31]

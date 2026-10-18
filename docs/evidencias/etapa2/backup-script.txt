@@ -1,0 +1,1 @@
+Backup criado: /tmp/arq-backups/arqueologia-20261018T200902Z.sql.gz

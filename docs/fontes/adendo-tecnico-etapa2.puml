@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+hide circle
+hide methods
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 16
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #EAF0F5
+entity usuario_app {
+ * <u>id_usuario</u> : INT [PK]
+ --
+ * login : VARCHAR(80) [UNIQUE]
+ * nome : VARCHAR(120)
+ * perfil : VARCHAR(16) [CHECK]
+ * senha_hash : VARCHAR(255)
+ * ativo : BOOLEAN
+}
+entity auditoria {
+ * <u>id_auditoria</u> : BIGINT [PK]
+ --
+ * usuario_aplicacao : VARCHAR(120)
+ * usuario_banco : VARCHAR(288)
+ * instante : TIMESTAMP(6)
+ * tabela : VARCHAR(40)
+ * operacao : VARCHAR(12)
+ * referencia : VARCHAR(80)
+ valores_anteriores : JSON
+ valores_posteriores : JSON
+}
+@enduml

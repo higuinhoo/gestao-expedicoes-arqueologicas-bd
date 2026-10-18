@@ -1,0 +1,9 @@
+Backup lógico completo em gzip; tamanho: 2004268 bytes; duração: 0.807 s
+Restauração em outro servidor concluída em 4.455 s
+Contagens comparadas: {"TRIGGERS": 25, "VIEWS": 5, "analise_laboratorial": 20045, "analista_laboratorial": 13, "arqueologo": 14, "artefato": 20108, "artefato_analise": 40100, "auditoria": 10, "campanha": 40, "conservador": 13, "custodia_artefato": 100131, "fragmento": 150, "instituicao": 40, "intervencao_conservacao": 60, "local_armazenamento": 40, "participacao_campanha": 120, "pesquisador": 40, "sitio_arqueologico": 40, "unidade_escavacao": 80, "usuario_app": 3}
+VIEW vw_acervo_consulta OK, linhas: 20108
+VIEW vw_analises_consulta OK, linhas: 20045
+VIEW vw_relatorio_custodia OK, linhas: 20108
+Trigger restaurado executado: auditoria antes/durante/depois do rollback: [10, 11, 10]
+Três papéis e usuários reprovisionados; hashes da aplicação vieram do backup.
+Ensaio aprovado. Arquivo de backup e servidor restaurado permanecem locais, fora do versionamento.

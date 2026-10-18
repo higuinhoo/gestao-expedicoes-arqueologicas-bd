@@ -1,0 +1,4 @@
+JAR executável: Java 17, Main-Class válida, driver MySQL incorporado; janela de login iniciou em display virtual sem erro.
+Provisionamento Java em terminal: três contas existentes verificadas; hashes/sais registrados com senhas ocultas.
+Banco restaurado: login real dos perfis ADMIN, CATALOGADOR e CONSULTA confirmado.
+IDE NetBeans não executada neste ambiente; projeto Maven e ação de execução fornecidos.

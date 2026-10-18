@@ -1,0 +1,8 @@
+        SELECT laboratorio,COUNT(*) AS analises,SUM(amostras) AS amostras,
+        SUM(massa_g) AS massa_consumida_g,SUM(custo) AS custo_total
+        FROM vw_analises_consulta
+        WHERE (? IS NULL OR id_laboratorio=?) AND (?='' OR situacao=?)
+        AND data_inicio BETWEEN ? AND ?
+        GROUP BY id_laboratorio,laboratorio ORDER BY laboratorio
+
+Parâmetros: [3, 3, CONCLUIDA, CONCLUIDA, 2026-04-01, 2026-06-30]

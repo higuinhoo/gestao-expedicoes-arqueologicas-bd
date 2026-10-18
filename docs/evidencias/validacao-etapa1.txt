@@ -1,0 +1,27 @@
+MySQL: 8.4.11
+PASS reconstrução 1 — DDL, carga e 15 consultas sem erro
+PASS reconstrução 2 — DDL, carga e 15 consultas sem erro
+PASS volumes: instituicao=40, pesquisador=40, arqueologo=14, conservador=13, analista_laboratorial=13, sitio_arqueologico=40, campanha=40, participacao_campanha=120, unidade_escavacao=80, artefato=100, fragmento=150, analise_laboratorial=45, artefato_analise=100, intervencao_conservacao=60, local_armazenamento=40, custodia_artefato=119
+PASS consulta 15 — zero violações semânticas
+PASS RN08 INSERT — RN08
+PASS RN08 UPDATE — RN08
+PASS RN08 alteração de pesquisador — RN08
+PASS RN17 INSERT — RN17
+PASS RN17 UPDATE — RN17
+PASS RN17 alteração de instituição — RN17
+PASS RN25 INSERT — RN25
+PASS RN25 UPDATE — RN25
+PASS RN25 alteração de local — RN25
+PASS INSERT/UPDATE válidos e local opcional; ROLLBACK dos dados de teste
+PASS proteção de pai com snapshot antigo — filho recém-confirmado visível ao trigger
+PASS contorno: custódia com local pendente = 1
+PASS contorno: artefato sem custódia = 1
+PASS contorno: datação pendente = 8
+PASS contorno: dimensão desconhecida = 11
+PASS contorno: sítio sem artefatos = 1
+tabelas	COUNT(*)
+tabelas	16
+FKs	22
+CHECKs	28
+triggers	11
+Validação concluída. Nenhum dado dos testes negativos foi persistido.

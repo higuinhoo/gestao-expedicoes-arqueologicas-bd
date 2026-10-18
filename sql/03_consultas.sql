@@ -33,12 +33,16 @@ FROM analise_laboratorial
 WHERE data_fim IS NULL
 ORDER BY data_inicio;
 
--- 5) Quais são os dez fragmentos localizados com maior peso?
-SELECT id_artefato, numero_fragmento, peso_g, comprimento_mm
-FROM fragmento
-WHERE localizado = TRUE
-ORDER BY peso_g DESC
-LIMIT 10;
+-- 5) Quais artefatos frágeis ou críticos aguardam decisão de conservação?
+-- Consulta básica de triagem: prioriza risco e antiguidade da descoberta.
+-- A ausência de período estimado também é exibida como pendência documental.
+SELECT codigo_catalogo, nome, material, estado_conservacao,
+       data_descoberta, COALESCE(periodo_estimado, 'DATAÇÃO PENDENTE') AS periodo
+FROM artefato
+WHERE estado_conservacao IN ('FRAGIL', 'CRITICO')
+  AND situacao IN ('CATALOGADO', 'ARMAZENADO')
+ORDER BY CASE estado_conservacao WHEN 'CRITICO' THEN 0 ELSE 1 END,
+         data_descoberta, codigo_catalogo;
 
 -- CONSULTAS COM JUNÇÕES E AGREGAÇÃO
 
@@ -90,29 +94,22 @@ ORDER BY quantidade_analises DESC, massa_total_consumida_g DESC;
 
 -- CONSULTAS AVANÇADAS
 
--- 11) Quais artefatos possuem mais fragmentos do que a média de sua própria campanha?
-WITH contagem_fragmentos AS (
-    SELECT a.id_artefato, u.id_campanha,
-           COUNT(f.numero_fragmento) AS quantidade
-    FROM artefato AS a
-    INNER JOIN unidade_escavacao AS u ON u.id_unidade = a.id_unidade
-    LEFT JOIN fragmento AS f ON f.id_artefato = a.id_artefato
-    GROUP BY a.id_artefato, u.id_campanha
+-- 11) Quais análises custam mais que a média das análises do mesmo laboratório?
+-- Subconsulta escalar CORRELACIONADA: al2.id_laboratorio = al.id_laboratorio.
+-- al pertence à consulta externa; cada laboratório fornece sua própria média.
+SELECT al.id_analise, al.id_laboratorio, al.tipo_analise, al.custo
+FROM analise_laboratorial AS al
+WHERE al.custo > (
+    SELECT AVG(al2.custo)
+    FROM analise_laboratorial AS al2
+    WHERE al2.id_laboratorio = al.id_laboratorio
 )
-SELECT a.id_artefato, a.codigo_catalogo, a.nome,
-       cf.quantidade AS quantidade_fragmentos
-FROM contagem_fragmentos AS cf
-INNER JOIN artefato AS a ON a.id_artefato = cf.id_artefato
-WHERE cf.quantidade > (
-    SELECT AVG(cf2.quantidade)
-    FROM contagem_fragmentos AS cf2
-    WHERE cf2.id_campanha = cf.id_campanha
-)
-ORDER BY quantidade_fragmentos DESC, a.codigo_catalogo;
+ORDER BY al.id_laboratorio, al.custo DESC;
 
 -- 12) Quais artefatos possuem ao menos uma análise concluída com resultado registrado?
 SELECT a.id_artefato, a.codigo_catalogo, a.nome
 FROM artefato AS a
+-- EXISTS correlacionado: aa.id_artefato referencia a linha externa a.id_artefato.
 WHERE EXISTS (
     SELECT 1
     FROM artefato_analise AS aa

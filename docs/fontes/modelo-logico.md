@@ -147,3 +147,28 @@ PK = chave primária; FK = chave estrangeira; UQ = unicidade
 - documento_movimentacao: VARCHAR(40) [UQ]
 - motivo: VARCHAR(200) [atributo]
 - id_artefato_em_aberto: INT gerado [UQ]
+
+
+### Decisões de mapeamento por relação
+
+| Relação | Chave e estratégia | Justificativa |
+|---|---|---|
+| instituicao | id_instituicao substituta; nome é candidata | O nome pode sofrer ajuste institucional; a chave inteira mantém relacionamentos estáveis e UNIQUE preserva a identificação de negócio. |
+| pesquisador | id_pesquisador substituta; email é candidata | Email e registro podem mudar ou ser ausentes; o identificador interno evita propagação de alterações. |
+| arqueologo | PK herdada id_pesquisador | Tabela de subtipo evita nulos no supertipo e representa a especialização total e exclusiva; tipo_especializacao e consulta 15 verificam a consistência. O esquema atual não bloqueia toda violação de totalidade/exclusividade, que exige escrita coordenada da aplicação futura. |
+| conservador | PK herdada id_pesquisador | A PK também é FK para o supertipo, garantindo que nenhum conservador exista sem pesquisador. |
+| analista_laboratorial | PK herdada id_pesquisador | A estratégia supertipo mais subtipo preserva atributos específicos sem repetição dos atributos comuns. |
+| sitio_arqueologico | id_sitio substituta; nome é candidata | O nome é legível, mas pode ser revisto; a chave substituta permanece estável durante a pesquisa. |
+| campanha | id_campanha substituta; codigo é candidata | O código atende ao negócio e é UNIQUE, enquanto a PK inteira simplifica FKs e possíveis revisões administrativas. |
+| participacao_campanha | PK composta campanha e pesquisador | A ocorrência só existe pela combinação dos participantes; função, período e horas dependem da associação completa. |
+| unidade_escavacao | id_unidade substituta; campanha e codigo são candidatas | O código é único apenas dentro da campanha; a PK simples reduz o tamanho das referências de artefato. |
+| artefato | id_artefato substituta; codigo_catalogo é candidata | O código de catálogo permanece UNIQUE, mas a PK interna sustenta autorreferência e integrações sem acoplar o banco ao formato do código. |
+| fragmento | PK composta artefato e numero | É entidade fraca: o número identifica o fragmento somente no contexto de seu artefato proprietário. |
+| analise_laboratorial | id_analise substituta | Não há código natural estável para todos os métodos; a chave sequencial identifica cada execução laboratorial. |
+| artefato_analise | PK composta artefato e análise; amostra é candidata | A tabela resolve o N:N e armazena atributos que pertencem ao exame daquele artefato naquela análise. |
+| intervencao_conservacao | id_intervencao substituta | Uma intervenção não possui identificador natural confiável; data, tipo e responsável podem se repetir. |
+| local_armazenamento | id_local substituta; instituição e codigo são candidatas | O código do local é contextual à instituição; a PK simples facilita o histórico de custódia. |
+| custodia_artefato | id_custodia substituta; documento e artefato mais início são candidatas | A chave interna identifica o evento; unicidades impedem documento repetido, início duplicado e mais de uma custódia aberta. |
+
+
+A normalização formal está em `normalizacao.md`.

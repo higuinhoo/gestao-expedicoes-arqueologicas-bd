@@ -1,2 +1,6 @@
 CHECKLIST_ENTREGA.md
 *.docx
+
+__pycache__/
+*.py[cod]
+.venv/

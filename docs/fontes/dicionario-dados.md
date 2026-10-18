@@ -1,8 +1,12 @@
-# Dicionário de dados
+# A3 — Dicionário de dados
 
-## instituicao
+Cada seção apresenta uma relação, seus atributos, domínio, obrigatoriedade, chaves e observações em linguagem natural.
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+### instituicao
+
+Regras associadas: RN01.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_instituicao | INT | Sim | PK | Identificador interno |
 | nome | VARCHAR(120) | Sim | UQ | Nome oficial ou fictício |
@@ -12,9 +16,11 @@
 | uf | CHAR(2) | Não |  | Unidade federativa |
 | cidade | VARCHAR(80) | Sim |  | Cidade |
 
-## pesquisador
+### pesquisador
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN02–RN04.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_pesquisador | INT | Sim | PK | Identificador interno |
 | id_instituicao | INT | Sim | FK | Instituição de vínculo |
@@ -24,33 +30,41 @@
 | tipo_especializacao | VARCHAR(24) | Sim | CK | Discriminador da especialização |
 | situacao | VARCHAR(10) | Sim | CK | ATIVO ou INATIVO |
 
-## arqueologo
+### arqueologo
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN03/RN08.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_pesquisador | INT | Sim | PK/FK | Identifica o pesquisador especializado |
 | area_pesquisa | VARCHAR(100) | Sim |  | Área de pesquisa arqueológica |
 | numero_autorizacao | VARCHAR(40) | Sim | UQ | Autorização profissional |
 
-## conservador
+### conservador
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN03/RN20.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_pesquisador | INT | Sim | PK/FK | Identifica o pesquisador especializado |
 | especialidade_material | VARCHAR(80) | Sim |  | Material de especialização |
 | numero_registro | VARCHAR(40) | Sim | UQ | Registro profissional |
 
-## analista_laboratorial
+### analista_laboratorial
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN03.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_pesquisador | INT | Sim | PK/FK | Identifica o pesquisador especializado |
 | especialidade_analise | VARCHAR(100) | Sim |  | Especialidade técnica |
 | nivel_formacao | VARCHAR(30) | Sim |  | Titulação |
 
-## sitio_arqueologico
+### sitio_arqueologico
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN05.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_sitio | INT | Sim | PK | Identificador interno |
 | nome | VARCHAR(120) | Sim | UQ | Nome do sítio |
@@ -62,9 +76,11 @@
 | nivel_protecao | VARCHAR(20) | Sim | CK | Proteção legal |
 | data_cadastro | DATE | Sim |  | Data de cadastro |
 
-## campanha
+### campanha
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN06–RN09.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_campanha | INT | Sim | PK | Identificador interno |
 | id_sitio | INT | Sim | FK | Sítio da campanha |
@@ -77,9 +93,11 @@
 | situacao | VARCHAR(16) | Sim | CK | PLANEJADA, EM_ANDAMENTO, CONCLUIDA ou SUSPENSA |
 | orcamento | DECIMAL(12,2) | Sim | CK | Orçamento não negativo |
 
-## participacao_campanha
+### participacao_campanha
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN10–RN11.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_campanha | INT | Sim | PK/FK | Campanha |
 | id_pesquisador | INT | Sim | PK/FK | Pesquisador |
@@ -88,9 +106,11 @@
 | data_saida | DATE | Não | CK | Fim da participação |
 | horas_previstas | SMALLINT | Sim | CK | Carga horária positiva |
 
-## unidade_escavacao
+### unidade_escavacao
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN12.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_unidade | INT | Sim | PK | Identificador interno |
 | id_campanha | INT | Sim | FK | Campanha responsável |
@@ -100,9 +120,11 @@
 | data_abertura | DATE | Sim |  | Data de abertura |
 | data_encerramento | DATE | Não | CK | Data de encerramento |
 
-## artefato
+### artefato
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN13–RN15.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_artefato | INT | Sim | PK | Identificador interno |
 | id_unidade | INT | Sim | FK | Unidade de descoberta |
@@ -117,9 +139,11 @@
 | estado_conservacao | VARCHAR(16) | Sim | CK | Estado físico |
 | situacao | VARCHAR(18) | Sim | CK | Situação operacional |
 
-## fragmento
+### fragmento
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN14/RN16.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_artefato | INT | Sim | PK/FK | Artefato proprietário |
 | numero_fragmento | SMALLINT | Sim | PK | Número dentro do artefato |
@@ -128,9 +152,11 @@
 | descricao | VARCHAR(240) | Não |  | Características do fragmento |
 | localizado | BOOLEAN | Sim |  | Indica presença física |
 
-## analise_laboratorial
+### analise_laboratorial
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN17.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_analise | INT | Sim | PK | Identificador interno |
 | id_laboratorio | INT | Sim | FK | Instituição executora |
@@ -141,9 +167,11 @@
 | situacao | VARCHAR(16) | Sim | CK | SOLICITADA, EM_EXECUCAO, CONCLUIDA ou CANCELADA |
 | custo | DECIMAL(10,2) | Sim | CK | Custo não negativo |
 
-## artefato_analise
+### artefato_analise
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN18–RN19.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_artefato | INT | Sim | PK/FK | Artefato analisado |
 | id_analise | INT | Sim | PK/FK | Análise |
@@ -152,9 +180,11 @@
 | resultado_resumido | VARCHAR(300) | Não |  | Resultado sintético |
 | conclusao | TEXT | Não |  | Conclusão técnica |
 
-## intervencao_conservacao
+### intervencao_conservacao
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN20–RN21.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_intervencao | INT | Sim | PK | Identificador interno |
 | id_artefato | INT | Sim | FK | Artefato conservado |
@@ -167,9 +197,11 @@
 | situacao | VARCHAR(16) | Sim | CK | PLANEJADA, EM_EXECUCAO, CONCLUIDA ou CANCELADA |
 | custo | DECIMAL(10,2) | Sim | CK | Custo não negativo |
 
-## local_armazenamento
+### local_armazenamento
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+Regras associadas: RN22.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_local | INT | Sim | PK | Identificador interno |
 | id_instituicao | INT | Sim | FK | Instituição proprietária |
@@ -179,9 +211,13 @@
 | umidade_percentual | DECIMAL(5,2) | Não | CK | Umidade entre 0 e 100 |
 | capacidade | INT | Sim | CK | Capacidade positiva |
 
-## custodia_artefato
+### custodia_artefato
 
-| Atributo | Domínio | Obrigatório | Chave | Descrição |
+O campo gerado abaixo pertence ao projeto físico; não é um atributo independente do modelo conceitual.
+
+Regras associadas: RN23–RN25.
+
+| Atributo | Domínio | Obrig. | Chave | Descrição |
 |---|---|---|---|---|
 | id_custodia | INT | Sim | PK | Identificador interno |
 | id_artefato | INT | Sim | FK | Artefato custodiado |

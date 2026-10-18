@@ -2,9 +2,16 @@
 
 Projeto da Etapa 1 da disciplina Laboratório de Banco de Dados, semestre 2026/2, revisado conforme a devolutiva C1–C5 em 18/10/2026. A implementação da aplicação da Etapa 2 será realizada posteriormente.
 
-## MER editável no draw.io
+## Modelos prontos para visualizar e imprimir
 
-A [nova versão `.drawio`](docs/fontes/mer-conceitual.drawio) possui uma visão completa e quatro abas de detalhe, com posicionamento organizado e objetos editáveis. Consulte a [prévia em PDF](docs/mer-drawio-previa.pdf) e as [instruções para abrir no diagrams.net](docs/como-abrir-mer-drawio.md).
+- [MER conceitual em PDF](docs/mer-conceitual.pdf): notação de Chen, visão geral e quatro folhas com atributos e relacionamentos.
+- [Modelo lógico em PDF](docs/modelo-logico.pdf): visão geral das chaves, esquema completo e quatro folhas de detalhe.
+- [Pacote com PDFs e PNGs em alta resolução](docs/modelos-prontos.zip): arquivos já renderizados, sem necessidade de usar um editor.
+- [PNGs e SVGs por folha](docs/diagramas/): cada página disponível separadamente.
+
+O MER usa relacionamentos N:N com atributos próprios, símbolo nativo de especialização total/disjunta e entidade fraca. O modelo lógico exibe as 16 tabelas e as 22 FKs efetivamente declaradas no SQL. A visão geral serve para localizar os relacionamentos; as folhas seguintes apresentam os detalhes legíveis. Cada PDF preserva o tamanho apropriado da folha, de A3 a A0; para impressão sem redução, use o tamanho indicado pelo visualizador.
+
+Os modelos foram renderizados com PlantUML e Graphviz, a partir de fontes textuais verificáveis. Não é necessário gerar nada para usar os arquivos acima. A versão anterior [editável no draw.io](docs/fontes/mer-conceitual.drawio) permanece disponível como alternativa; os PDFs atuais correspondem às fontes PlantUML.
 
 ## Integrantes
 
@@ -35,7 +42,7 @@ O DDL remove e recria as tabelas do esquema `arqueologia_ucb`. Utilize uma inst�
 
 ## Correções da devolutiva
 
-- **C1:** MER vetorial em página inteira A1, cardinalidades nos dois extremos, especialização T,X integrada ao pesquisador e fontes editáveis sincronizadas. O relatório inclui o MER sem reduzi-lo a uma miniatura A4 e uma tabela textual de todas as cardinalidades.
+- **C1:** MER em notação de Chen, com visão completa, atributos em folhas de detalhe, cardinalidades e especialização total/disjunta com símbolos próprios. O relatório incorpora as folhas vetoriais e a tabela de cardinalidades.
 - **C2:** dependências funcionais `X -> Y` por relação e discussão formal de 3FN versus BCNF. A redundância de instituição/local de custódia e a coluna física gerada são explicitadas; não se afirma normalização integral sem ressalvas.
 - **C3:** índices compostos `idx_` e nove triggers adicionais para RN08, RN17 e RN25, inclusive alterações nos registros referenciados. Os dois triggers originais de autorreferência foram preservados.
 - **C4:** descrições variadas, materiais e cronologia coerentes, casos de contorno verificáveis, consulta 5 de triagem por risco e consulta 11 com subconsulta escalar correlacionada explícita.
@@ -71,28 +78,29 @@ sql/
   03_consultas.sql             # 15 consultas comentadas
 docs/
   relatorio-etapa1.pdf         # A1–A5, validação e revisão da devolutiva
-  mer-conceitual.pdf           # Uma página A1 vetorial, com fontes editáveis
-  modelo-logico.pdf            # Uma página A1 vetorial
+  mer-conceitual.pdf           # Chen: visão geral e quatro folhas de detalhe
+  modelo-logico.pdf            # Visão geral, esquema completo e detalhes
   dicionario-dados.pdf         # Também incorporado integralmente ao relatório
   revisao-devolutiva-etapa1.md  # Rastreabilidade C1–C5 para o relatório final
-  fontes/                     # Fontes Markdown, DOT e Mermaid
+  fontes/                     # Fontes Markdown e PlantUML; versões anteriores preservadas
   evidencias/                 # Saída dos testes executados
 scripts/
-  gerar_modelos.py             # DDL -> DOT/Mermaid -> PDFs vetoriais
+  gerar_modelos.py             # DDL/modelo -> PlantUML -> PDF, SVG e PNG
   gerar_documentos.py          # Markdown + modelos -> PDFs paginados
   requirements.txt
 tests/
   validar_etapa1.py            # Testes em MySQL descartável
 ```
 
-## Regenerar os PDFs
+## Regenerar os PDFs e PNGs
 
-Use Python 3.10+, Graphviz (`dot`), Pandoc e as fontes DejaVu. Em Debian/Ubuntu, os pacotes são `graphviz`, `pandoc` e `fonts-dejavu-core`. Na raiz do repositório:
+Os resultados prontos já estão versionados em `docs/`. A regeneração requer Python 3.10+, Java 17+, Graphviz (`dot`), Pandoc, Cairo e fontes DejaVu. Em Debian/Ubuntu: `default-jre`, `graphviz`, `pandoc`, `libcairo2` e `fonts-dejavu-core`.
 
 ```bash
 python -m pip install -r scripts/requirements.txt
-python scripts/gerar_modelos.py
+curl -L --fail https://github.com/plantuml/plantuml/releases/download/v1.2025.2/plantuml-1.2025.2.jar -o /tmp/plantuml.jar
+PLANTUML_JAR=/tmp/plantuml.jar python scripts/gerar_modelos.py
 python scripts/gerar_documentos.py
 ```
 
-As fontes DOT são a representação editável canônica dos diagramas; as fontes Mermaid são alternativas para consulta no GitHub. Ambas são regeneradas do DDL pelo script. Os PDFs vetoriais preservam nitidez na ampliação e devem ser visualizados em página inteira A1, com zoom para leitura em tela.
+As fontes canônicas dos modelos atuais estão em `docs/fontes/plantuml/`. A descrição conceitual usa relacionamentos de domínio; o lógico extrai as colunas e FKs do DDL. Arquivos `.dot`, `.mmd` e `.drawio` da revisão anterior foram preservados para consulta e não geram os PDFs atuais. O relatório incorpora todas as folhas dos dois modelos, com paginação contínua.

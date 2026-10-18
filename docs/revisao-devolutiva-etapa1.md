@@ -4,7 +4,7 @@ Data da revisão: 18/10/2026. Escopo: correção de C1 a C5; a aplicação e os 
 
 | Critério | Devolutiva | Correção realizada | Evidência |
 |---|---|---|---|
-| C1 | Diagramas pequenos; cardinalidades ilegíveis/ausentes; especialização isolada | MER vetorial de página inteira A1, cardinalidades nos dois extremos e tabela textual completa; T,X integrado ao supertipo e ligações ISA diretas; fontes sincronizadas | docs/mer-conceitual.pdf; fontes DOT/Mermaid; seção A2 |
+| C1 | Diagramas pequenos; cardinalidades ilegíveis/ausentes; especialização isolada | MER Chen vetorial, visão completa e detalhes com atributos; cardinalidades verificáveis; especialização total e disjunta por símbolo nativo; fontes PlantUML sincronizadas | docs/mer-conceitual.pdf; fontes PlantUML; seção A2 |
 | C2 | Formalizar dependências; discutir 3FN versus BCNF | Dependências X -> Y por relação e por chave candidata; definições formais; análise explícita da redundância de custódia e da coluna gerada | seção A5; docs/fontes/normalizacao.md |
 | C3 | Acrescentar idx_ e triggers para coordenador, laboratório e local | Quatro índices compostos (um substitui índice simples); nove triggers adicionais, incluindo proteção de alterações no lado referenciado; comentários RN corrigidos | sql/01_ddl.sql; testes de INSERT/UPDATE e alterações de pais |
 | C4 | Variar descrições e contornos; melhorar consulta 5; correlação explícita | Cem descrições distintas de artefatos, materiais coerentes e datas encadeadas; contornos verificáveis; consulta 5 de triagem por risco; consulta 11 escalar correlacionada por laboratório | sql/02_carga.sql; sql/03_consultas.sql; evidências de validação |

@@ -1,0 +1,5 @@
+OK: atributos conceituais cobertos nas folhas de detalhe; identificadores herdados e N:N conferidos
+OK: modelo lógico com 16 tabelas, 22 FKs e todos os atributos do DDL
+OK: mer-conceitual.pdf 5 páginas vetoriais, sem texto fora da folha
+OK: modelo-logico.pdf 6 páginas vetoriais, sem texto fora da folha
+OK: relatorio-etapa1.pdf 31 páginas vetoriais, sem texto fora da folha

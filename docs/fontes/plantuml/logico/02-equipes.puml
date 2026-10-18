@@ -1,0 +1,93 @@
+@startuml
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 18
+skinparam nodesep 65
+skinparam ranksep 85
+skinparam ArrowColor #3A4653
+skinparam ArrowThickness 1.3
+skinparam EntityBackgroundColor #FFFFFF
+skinparam EntityBorderColor #223447
+skinparam RelationshipBackgroundColor #F1F4F7
+skinparam RelationshipBorderColor #223447
+skinparam AttributeBackgroundColor #FFFFFF
+skinparam AttributeBorderColor #718096
+
+hide circle
+hide methods
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #FFFFFF
+skinparam classBorderColor #223447
+skinparam classFontColor #172B3A
+skinparam classHeaderBackgroundColor #EAF0F5
+entity "instituicao" as instituicao {
+  * <u>id_instituicao</u> : INT [PK]
+  --
+  * nome : VARCHAR(120)
+    sigla : VARCHAR(20)
+  * tipo : VARCHAR(20)
+  * pais : VARCHAR(60)
+    uf : CHAR(2)
+  * cidade : VARCHAR(80)
+}
+entity "pesquisador" as pesquisador {
+  * <u>id_pesquisador</u> : INT [PK]
+  --
+  * id_instituicao : INT [FK]
+  * nome : VARCHAR(120)
+  * email : VARCHAR(160)
+    registro_profissional : VARCHAR(40)
+  * tipo_especializacao : VARCHAR(24)
+  * situacao : VARCHAR(10)
+}
+entity "arqueologo" as arqueologo {
+  * <u>id_pesquisador</u> : INT [PK/FK]
+  --
+  * area_pesquisa : VARCHAR(100)
+  * numero_autorizacao : VARCHAR(40)
+}
+entity "conservador" as conservador {
+  * <u>id_pesquisador</u> : INT [PK/FK]
+  --
+  * especialidade_material : VARCHAR(80)
+  * numero_registro : VARCHAR(40)
+}
+entity "analista_laboratorial" as analista_laboratorial {
+  * <u>id_pesquisador</u> : INT [PK/FK]
+  --
+  * especialidade_analise : VARCHAR(100)
+  * nivel_formacao : VARCHAR(30)
+}
+entity "campanha" as campanha {
+  * <u>id_campanha</u> : INT [PK]
+  --
+  * id_sitio : INT [FK]
+  * id_coordenador : INT [FK]
+  * codigo : VARCHAR(24)
+  * nome : VARCHAR(140)
+  * objetivo : TEXT
+  * data_inicio : DATE
+    data_fim : DATE
+  * situacao : VARCHAR(16)
+  * orcamento : DECIMAL(12,2)
+}
+entity "participacao_campanha" as participacao_campanha {
+  * <u>id_campanha</u> : INT [PK/FK]
+  * <u>id_pesquisador</u> : INT [PK/FK]
+  --
+  * funcao : VARCHAR(60)
+  * data_entrada : DATE
+    data_saida : DATE
+  * horas_previstas : SMALLINT
+}
+instituicao ||--o{ pesquisador : id_instituicao
+pesquisador ||--o| arqueologo : id_pesquisador
+pesquisador ||--o| conservador : id_pesquisador
+pesquisador ||--o| analista_laboratorial : id_pesquisador
+pesquisador ||--o{ campanha : id_coordenador
+campanha ||--o{ participacao_campanha : id_campanha
+pesquisador ||--o{ participacao_campanha : id_pesquisador
+@enduml

@@ -46,40 +46,41 @@ Licenças governamentais e imagens binárias ficam fora do escopo. Interface, au
 
 ## A2 — Modelo Entidade-Relacionamento conceitual
 
-O MER completo integra este relatório em uma página vetorial A1, sem redução a miniatura A4. Identificadores são sublinhados. Usa-se notação de Engenharia da Informação (pé de galinha), com (mín,máx) legível nos dois extremos. A legenda define a leitura: na ponta de uma entidade informa-se quantas instâncias dela podem corresponder a uma instância da entidade oposta.
+O MER utiliza exclusivamente a notação de Peter Chen: entidades em retângulos, relacionamentos em losangos e atributos em elipses. O PDF começa pela visão completa em uma página própria e continua com quatro folhas de detalhe, que exibem os atributos e seus identificadores. As folhas são vetoriais e podem ser ampliadas sem perda de nitidez.
 
-A especialização é total e exclusiva (T,X): todo pesquisador deve ter exatamente um dos três subtipos. As ligações ISA partem diretamente do supertipo, sem uma entidade artificial de especialização. FRAGMENTO é entidade fraca e possui identificação dependente do artefato. PARTICIPACAO_CAMPANHA e ARTEFATO_ANALISE resolvem os dois N:N com atributos próprios. CUSTODIA_ARTEFATO registra o histórico datado. O campo físico gerado de custódia aberta não é tratado como atributo conceitual independente.
+A especialização do pesquisador é total e exclusiva: a linha dupla até o círculo d indica totalidade, e d indica subtipos disjuntos. Não existe uma entidade artificial de especialização. Os atributos identificadores dos subtipos são herdados do pesquisador. FRAGMENTO é entidade fraca, com retângulo duplo e relacionamento identificador duplo; numero_fragmento é o discriminador, cuja identificação depende do artefato.
+
+Os relacionamentos N:N Participa (pesquisador–campanha) e É analisado em (artefato–análise) possuem atributos próprios, exibidos nas folhas de detalhe. As respectivas tabelas associativas pertencem ao modelo lógico A4. CUSTODIA_ARTEFATO é entidade de histórico datado. A coluna física gerada de custódia aberta não é um atributo conceitual independente.
 
 [INSERIR_MER]
 
 ### A2.1 — Cardinalidades para conferência
 
-| Entidade A | Relacionamento | Ponta A | Entidade B | Ponta B |
-|---|---|---|---|---|
-| instituicao | vincula | (1,1) | pesquisador | (0,N) |
-| pesquisador | ISA | (1,1) | arqueologo | (0,1) |
-| pesquisador | ISA | (1,1) | conservador | (0,1) |
-| pesquisador | ISA | (1,1) | analista_laboratorial | (0,1) |
-| sitio_arqueologico | recebe | (1,1) | campanha | (0,N) |
-| pesquisador | coordena [RN08] | (1,1) | campanha | (0,N) |
-| campanha | possui | (1,1) | participacao_campanha | (0,N) |
-| pesquisador | integra | (1,1) | participacao_campanha | (0,N) |
-| campanha | divide-se | (1,1) | unidade_escavacao | (0,N) |
-| unidade_escavacao | revela | (1,1) | artefato | (0,N) |
-| artefato | referência | (0,1) | artefato | (0,N) |
-| artefato | compõe / identificador | (1,1) | fragmento | (0,N) |
-| instituicao | executa [RN17] | (1,1) | analise_laboratorial | (0,N) |
-| artefato | participa | (1,1) | artefato_analise | (0,N) |
-| analise_laboratorial | examina | (1,1) | artefato_analise | (0,N) |
-| artefato | recebe | (1,1) | intervencao_conservacao | (0,N) |
-| conservador | realiza [RN20] | (1,1) | intervencao_conservacao | (0,N) |
-| instituicao | possui | (1,1) | local_armazenamento | (0,N) |
-| artefato | histórico datado | (1,1) | custodia_artefato | (0,N) |
-| instituicao | assume | (1,1) | custodia_artefato | (0,N) |
-| local_armazenamento | abriga [RN25] | (0,1) | custodia_artefato | (0,N) |
-| pesquisador | responde | (1,1) | custodia_artefato | (0,N) |
+Na notação de Chen, (mín,máx) informa quantas ocorrências do relacionamento podem envolver uma instância da entidade daquele lado. Exemplo: uma instituição vincula zero ou muitos pesquisadores; cada pesquisador tem exatamente uma instituição. A leitura difere da posição dos símbolos de pé de galinha usados no modelo lógico.
 
-As três ligações ISA têm restrição conjunta T,X: os máximos individuais 0..1 não autorizam ausência de todos os subtipos nem presença simultânea em mais de um. As regras de tipo de coordenador, laboratório, conservador e local complementam as cardinalidades.
+| Entidade A | Relacionamento | Participação A | Entidade B | Participação B |
+|---|---|---|---|---|
+| instituicao | Vincula | (0,N) | pesquisador | (1,1) |
+| pesquisador | Participa | (0,N) | campanha | (0,N) |
+| sitio_arqueologico | Recebe | (0,N) | campanha | (1,1) |
+| arqueologo | Coordena | (0,N) | campanha | (1,1) |
+| campanha | Possui | (0,N) | unidade_escavacao | (1,1) |
+| unidade_escavacao | Revela | (0,N) | artefato | (1,1) |
+| artefato | Referencia | (0,1) | artefato | (0,N) |
+| artefato | Compoe | (0,N) | fragmento | (1,1) |
+| instituicao | Executa | (0,N) | analise_laboratorial | (1,1) |
+| artefato | É analisado em | (0,N) | analise_laboratorial | (0,N) |
+| conservador | Realiza | (0,N) | intervencao_conservacao | (1,1) |
+| artefato | Recebe | (0,N) | intervencao_conservacao | (1,1) |
+| instituicao | Possui | (0,N) | local_armazenamento | (1,1) |
+| artefato | Tem histórico | (0,N) | custodia_artefato | (1,1) |
+| instituicao | Assume | (0,N) | custodia_artefato | (1,1) |
+| local_armazenamento | Abriga | (0,N) | custodia_artefato | (0,1) |
+| pesquisador | Responsabiliza-se | (0,N) | custodia_artefato | (1,1) |
+
+Na autorrelação Referencia, um artefato no papel de parte aponta para no máximo um conjunto; no papel de conjunto pode reunir várias partes. A autorreferência direta ao mesmo identificador é proibida pela RN15.
+
+As cardinalidades das associações não substituem as regras semânticas: o coordenador é arqueólogo, a instituição que executa análises é laboratório, a intervenção tem conservador e o local pertence à instituição da custódia. A generalização é representada por totalidade/exclusividade, e não por uma associação binária adicional.
 
 ## A3 — Dicionário de dados conceitual e correspondência física
 
@@ -314,7 +315,7 @@ Regras associadas: RN23–RN25.
 | id_artefato_em_aberto | INT gerado | Não | UQ | Garante uma custódia vigente por artefato |
 ## A4 — Modelo lógico relacional e decisões de mapeamento
 
-O diagrama relacional completo integra este relatório em uma página vetorial A1. PKs são sublinhadas, FKs são identificadas, e os relacionamentos N:N aparecem mapeados nas tabelas associativas. A identificação de FRAGMENTO é composta e dependente. Todas as FKs possuem ações ON DELETE e ON UPDATE explícitas no DDL.
+O diagrama relacional integra este relatório com uma visão geral, uma folha de esquema completo e quatro folhas de detalhe. PKs são sublinhadas, FKs são identificadas, e os relacionamentos N:N aparecem mapeados nas tabelas associativas. A identificação de FRAGMENTO é composta e dependente. Todas as FKs possuem ações ON DELETE e ON UPDATE explícitas no DDL.
 
 [INSERIR_LOGICO]
 
@@ -530,10 +531,10 @@ Executamos os três scripts no MySQL 8.4.11, em base limpa e em nova reconstruç
 - sql/02_carga.sql: carga sintética, casos de contorno e contagens.
 - sql/03_consultas.sql: quinze perguntas de negócio, organizadas em cinco básicas, cinco de junção/agregação e cinco avançadas.
 - docs/relatorio-etapa1.pdf: relatório consolidado revisado com A1–A5 e o registro da devolutiva.
-- docs/mer-conceitual.pdf: MER completo em página A1 vetorial; permite ampliação sem perda de nitidez.
-- docs/modelo-logico.pdf: esquema relacional completo em página A1 vetorial.
+- docs/mer-conceitual.pdf: MER Chen com visão completa e folhas de detalhe; permite ampliação sem perda de nitidez.
+- docs/modelo-logico.pdf: esquema relacional completo e folhas de detalhe.
 - docs/dicionario-dados.pdf: dicionário integral, também incorporado ao relatório.
-- docs/fontes/: fontes Markdown, DOT e Mermaid utilizadas para regenerar os PDFs.
+- docs/fontes/: fontes Markdown e PlantUML utilizadas para regenerar os PDFs.
 - docs/revisao-devolutiva-etapa1.md: rastreabilidade C1–C5 para incorporar ao relatório final.
 - docs/evidencias/validacao-etapa1.txt: saída da validação executada no MySQL.
 - scripts/: geração reproduzível dos diagramas e documentos.
@@ -545,7 +546,7 @@ Data da revisão: 18/10/2026. Escopo: correção de C1 a C5; a aplicação e os 
 
 | Critério | Devolutiva | Correção realizada | Evidência |
 |---|---|---|---|
-| C1 | Diagramas pequenos; cardinalidades ilegíveis/ausentes; especialização isolada | MER vetorial de página inteira A1, cardinalidades nos dois extremos e tabela textual completa; T,X integrado ao supertipo e ligações ISA diretas; fontes sincronizadas | docs/mer-conceitual.pdf; fontes DOT/Mermaid; seção A2 |
+| C1 | Diagramas pequenos; cardinalidades ilegíveis/ausentes; especialização isolada | MER Chen vetorial, visão completa e detalhes com atributos; cardinalidades verificáveis; especialização total e disjunta por símbolo nativo; fontes PlantUML sincronizadas | docs/mer-conceitual.pdf; fontes PlantUML; seção A2 |
 | C2 | Formalizar dependências; discutir 3FN versus BCNF | Dependências X -> Y por relação e por chave candidata; definições formais; análise explícita da redundância de custódia e da coluna gerada | seção A5; docs/fontes/normalizacao.md |
 | C3 | Acrescentar idx_ e triggers para coordenador, laboratório e local | Quatro índices compostos (um substitui índice simples); nove triggers adicionais, incluindo proteção de alterações no lado referenciado; comentários RN corrigidos | sql/01_ddl.sql; testes de INSERT/UPDATE e alterações de pais |
 | C4 | Variar descrições e contornos; melhorar consulta 5; correlação explícita | Cem descrições distintas de artefatos, materiais coerentes e datas encadeadas; contornos verificáveis; consulta 5 de triagem por risco; consulta 11 escalar correlacionada por laboratório | sql/02_carga.sql; sql/03_consultas.sql; evidências de validação |
@@ -563,4 +564,4 @@ Este registro e as seções revisadas A1–A5 devem compor o relatório final da
 
 ## Declaração de uso de inteligência artificial
 
-A equipe utilizou IA como apoio à estruturação inicial, geração de dados sintéticos, documentação e revisão do SQL. Na revisão da devolutiva, a ferramenta auxiliou na redação das dependências funcionais, nos triggers, na variação da carga, no redesenho dos modelos e na geração dos PDFs. A verificação técnica foi feita por execução em MySQL 8.4.11, testes positivos e negativos de restrições e inspeção dos PDFs. Os integrantes devem revisar o material, conferir a interpretação das regras e conseguir explicar as decisões na apresentação.
+A equipe utilizou IA como apoio à estruturação inicial, geração de dados sintéticos, documentação e revisão do SQL. Na revisão da devolutiva, a ferramenta auxiliou na redação das dependências funcionais, nos triggers, na variação da carga, na descrição dos modelos em PlantUML e na geração dos PDFs/PNGs com PlantUML, Graphviz e CairoSVG. A verificação técnica foi feita por execução em MySQL 8.4.11, testes positivos e negativos de restrições e inspeção dos PDFs. Os integrantes devem revisar o material, conferir a interpretação das regras e conseguir explicar as decisões na apresentação.

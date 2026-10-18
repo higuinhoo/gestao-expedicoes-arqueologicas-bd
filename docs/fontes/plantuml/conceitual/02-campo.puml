@@ -1,0 +1,85 @@
+@startchen
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 18
+skinparam nodesep 65
+skinparam ranksep 85
+skinparam ArrowColor #3A4653
+skinparam ArrowThickness 1.3
+skinparam EntityBackgroundColor #FFFFFF
+skinparam EntityBorderColor #223447
+skinparam RelationshipBackgroundColor #F1F4F7
+skinparam RelationshipBorderColor #223447
+skinparam AttributeBackgroundColor #FFFFFF
+skinparam AttributeBorderColor #718096
+
+entity "SÍTIO ARQUEOLÓGICO" as sitio_arqueologico {
+  "id_sitio" as id_sitio <<key>>
+  "nome" as nome
+  "municipio" as municipio
+  "uf" as uf
+  "latitude" as latitude
+  "longitude" as longitude
+  "periodo_historico" as periodo_historico
+  "nivel_protecao" as nivel_protecao
+  "data_cadastro" as data_cadastro
+}
+entity "CAMPANHA" as campanha {
+  "id_campanha" as id_campanha <<key>>
+  "codigo" as codigo
+  "nome" as nome
+  "objetivo" as objetivo
+  "data_inicio" as data_inicio
+  "data_fim" as data_fim
+  "situacao" as situacao
+  "orcamento" as orcamento
+}
+entity "UNIDADE DE ESCAVAÇÃO" as unidade_escavacao {
+  "id_unidade" as id_unidade <<key>>
+  "codigo" as codigo
+  "setor" as setor
+  "nivel_estratigrafico" as nivel_estratigrafico
+  "data_abertura" as data_abertura
+  "data_encerramento" as data_encerramento
+}
+entity "ARTEFATO" as artefato {
+  "id_artefato" as id_artefato <<key>>
+  "codigo_catalogo" as codigo_catalogo
+  "nome" as nome
+  "descricao" as descricao
+  "material" as material
+  "periodo_estimado" as periodo_estimado
+  "data_descoberta" as data_descoberta
+  "profundidade_cm" as profundidade_cm
+  "estado_conservacao" as estado_conservacao
+  "situacao" as situacao
+}
+entity "FRAGMENTO" as fragmento <<weak>> {
+  "numero_fragmento" as numero_fragmento <<key>>
+  "peso_g" as peso_g
+  "comprimento_mm" as comprimento_mm
+  "descricao" as descricao
+  "localizado" as localizado
+}
+relationship "Recebe" as r_recebe {
+}
+sitio_arqueologico -(0,N)- r_recebe
+r_recebe -(1,1)- campanha
+relationship "Possui" as r_unidades {
+}
+campanha -(0,N)- r_unidades
+r_unidades -(1,1)- unidade_escavacao
+relationship "Revela" as r_revela {
+}
+unidade_escavacao -(0,N)- r_revela
+r_revela -(1,1)- artefato
+relationship "Referencia" as r_referencia {
+}
+artefato -(0,1)- r_referencia
+r_referencia -(0,N)- artefato
+relationship "Compoe" as r_compoe <<identifying>> {
+}
+artefato -(0,N)- r_compoe
+r_compoe =(1,1)= fragmento
+@endchen

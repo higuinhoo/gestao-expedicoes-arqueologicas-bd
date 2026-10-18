@@ -12,10 +12,11 @@ USE arqueologia_ucb;
 
 -- Rastreabilidade das regras de negócio no esquema físico
 -- RN01: instituicao - uq_instituicao_nome e ck_instituicao_tipo.
--- RN02-RN04: pesquisador e subtipos - FKs, unicidades e domínios de especialização/situação.
+-- RN02-RN04: pesquisador e subtipos - FKs, unicidades e domínios; RN03/RN04 permanecem verificadas na consulta 15.
 -- RN05: sitio_arqueologico - obrigatoriedade e limites de latitude/longitude.
--- RN06-RN09: campanha e participacao_campanha - código único, períodos, coordenação e associação N:N.
--- RN10-RN12: unidade_escavacao - código composto único, período e vínculo obrigatório à campanha.
+-- RN06-RN09: campanha - código único, períodos e triggers de coordenador arqueólogo.
+-- RN10-RN11: participacao_campanha - associação N:N, períodos e horas.
+-- RN12: unidade_escavacao - código composto único, período e vínculo obrigatório à campanha.
 -- RN13-RN15: artefato - catálogo único, contexto de descoberta e autorreferência protegida por triggers.
 -- RN16: fragmento - entidade fraca identificada por (id_artefato, numero_fragmento).
 -- RN17-RN19: analise_laboratorial e artefato_analise - laboratório, período e associação N:N.
@@ -142,7 +143,9 @@ CREATE TABLE campanha (
         REFERENCES pesquisador (id_pesquisador) ON UPDATE CASCADE ON DELETE RESTRICT,
     INDEX idx_campanha_sitio (id_sitio),
     INDEX idx_campanha_coordenador (id_coordenador),
-    INDEX idx_campanha_periodo (data_inicio, data_fim)
+    INDEX idx_campanha_periodo (data_inicio, data_fim),
+    -- Consulta 1: data_fim IS NULL antes do intervalo por data_inicio.
+    INDEX idx_campanha_aberta_inicio (data_fim, data_inicio)
 ) ENGINE = InnoDB;
 
 CREATE TABLE participacao_campanha (
@@ -202,7 +205,8 @@ CREATE TABLE artefato (
         REFERENCES artefato (id_artefato) ON UPDATE RESTRICT ON DELETE RESTRICT,
     INDEX idx_artefato_unidade (id_unidade),
     INDEX idx_artefato_referencia (id_artefato_referencia),
-    INDEX idx_artefato_material (material)
+    -- Consulta 2: filtro por material e estado de conservação.
+    INDEX idx_artefato_material_estado (material, estado_conservacao)
 ) ENGINE = InnoDB;
 
 DELIMITER $$
@@ -262,7 +266,9 @@ CREATE TABLE analise_laboratorial (
     CONSTRAINT fk_analise_laboratorio FOREIGN KEY (id_laboratorio)
         REFERENCES instituicao (id_instituicao) ON UPDATE CASCADE ON DELETE RESTRICT,
     INDEX idx_analise_laboratorio (id_laboratorio),
-    INDEX idx_analise_periodo (data_inicio, data_fim)
+    INDEX idx_analise_periodo (data_inicio, data_fim),
+    -- Consulta 4: análises sem conclusão, em ordem de início.
+    INDEX idx_analise_aberta_inicio (data_fim, data_inicio)
 ) ENGINE = InnoDB;
 
 CREATE TABLE artefato_analise (
@@ -351,5 +357,144 @@ CREATE TABLE custodia_artefato (
     INDEX idx_custodia_artefato_periodo (id_artefato, data_inicio, data_fim),
     INDEX idx_custodia_instituicao (id_instituicao),
     INDEX idx_custodia_local (id_local),
-    INDEX idx_custodia_responsavel (id_responsavel)
+    INDEX idx_custodia_responsavel (id_responsavel),
+    -- Consulta 7: custódias vigentes e instituição responsável.
+    INDEX idx_custodia_vigencia_instituicao (data_fim, id_instituicao)
 ) ENGINE = InnoDB;
+
+
+-- Reforço da devolutiva C3. Não são gatilhos de auditoria da Etapa 2.
+-- Leituras com FOR SHARE bloqueiam o registro-pai até o fim da transação,
+-- evitando validar um tipo/local que outra sessão altere antes do COMMIT.
+DELIMITER $$
+
+CREATE TRIGGER trg_campanha_validar_insert
+BEFORE INSERT ON campanha
+FOR EACH ROW
+BEGIN
+    DECLARE v_tipo VARCHAR(24) DEFAULT NULL;
+    SELECT tipo_especializacao INTO v_tipo FROM pesquisador
+    WHERE id_pesquisador = NEW.id_coordenador FOR SHARE;
+    IF v_tipo IS NULL OR v_tipo <> 'ARQUEOLOGO' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'RN08: coordenador deve ser arqueologo';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_campanha_validar_update
+BEFORE UPDATE ON campanha
+FOR EACH ROW
+BEGIN
+    DECLARE v_tipo VARCHAR(24) DEFAULT NULL;
+    SELECT tipo_especializacao INTO v_tipo FROM pesquisador
+    WHERE id_pesquisador = NEW.id_coordenador FOR SHARE;
+    IF v_tipo IS NULL OR v_tipo <> 'ARQUEOLOGO' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'RN08: coordenador deve ser arqueologo';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_analise_laboratorial_validar_insert
+BEFORE INSERT ON analise_laboratorial
+FOR EACH ROW
+BEGIN
+    DECLARE v_tipo VARCHAR(24) DEFAULT NULL;
+    SELECT tipo INTO v_tipo FROM instituicao
+    WHERE id_instituicao = NEW.id_laboratorio FOR SHARE;
+    IF v_tipo IS NULL OR v_tipo <> 'LABORATORIO' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'RN17: analise exige instituicao laboratorio';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_analise_laboratorial_validar_update
+BEFORE UPDATE ON analise_laboratorial
+FOR EACH ROW
+BEGIN
+    DECLARE v_tipo VARCHAR(24) DEFAULT NULL;
+    SELECT tipo INTO v_tipo FROM instituicao
+    WHERE id_instituicao = NEW.id_laboratorio FOR SHARE;
+    IF v_tipo IS NULL OR v_tipo <> 'LABORATORIO' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'RN17: analise exige instituicao laboratorio';
+    END IF;
+END$$
+
+-- RN25: local opcional; se informado, deve pertencer à instituição da custódia.
+CREATE TRIGGER trg_custodia_validar_insert
+BEFORE INSERT ON custodia_artefato
+FOR EACH ROW
+BEGIN
+    DECLARE v_instituicao INT DEFAULT NULL;
+    IF NEW.id_local IS NOT NULL THEN
+        SELECT id_instituicao INTO v_instituicao FROM local_armazenamento
+        WHERE id_local = NEW.id_local FOR SHARE;
+        IF v_instituicao IS NULL OR v_instituicao <> NEW.id_instituicao THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'RN25: local deve pertencer a instituicao da custodia';
+        END IF;
+    END IF;
+END$$
+
+-- RN25: local opcional; se informado, deve pertencer à instituição da custódia.
+CREATE TRIGGER trg_custodia_validar_update
+BEFORE UPDATE ON custodia_artefato
+FOR EACH ROW
+BEGIN
+    DECLARE v_instituicao INT DEFAULT NULL;
+    IF NEW.id_local IS NOT NULL THEN
+        SELECT id_instituicao INTO v_instituicao FROM local_armazenamento
+        WHERE id_local = NEW.id_local FOR SHARE;
+        IF v_instituicao IS NULL OR v_instituicao <> NEW.id_instituicao THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'RN25: local deve pertencer a instituicao da custodia';
+        END IF;
+    END IF;
+END$$
+
+-- Protegem também alterações no lado referenciado, não apenas no filho.
+CREATE TRIGGER trg_pesquisador_preservar_coordenacao
+BEFORE UPDATE ON pesquisador
+FOR EACH ROW
+BEGIN
+    DECLARE v_referencia INT DEFAULT NULL;
+    IF NEW.tipo_especializacao <> 'ARQUEOLOGO' THEN
+        -- Leitura corrente, inclusive se a transação já estabeleceu snapshot anterior.
+        SELECT 1 INTO v_referencia FROM campanha
+        WHERE id_coordenador = OLD.id_pesquisador LIMIT 1 FOR SHARE;
+        IF v_referencia IS NOT NULL THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'RN08: pesquisador coordena campanha e deve permanecer arqueologo';
+        END IF;
+    END IF;
+END$$
+
+CREATE TRIGGER trg_instituicao_preservar_laboratorio
+BEFORE UPDATE ON instituicao
+FOR EACH ROW
+BEGIN
+    DECLARE v_referencia INT DEFAULT NULL;
+    IF NEW.tipo <> 'LABORATORIO' THEN
+        -- Leitura corrente, inclusive se a transação já estabeleceu snapshot anterior.
+        SELECT 1 INTO v_referencia FROM analise_laboratorial
+        WHERE id_laboratorio = OLD.id_instituicao LIMIT 1 FOR SHARE;
+        IF v_referencia IS NOT NULL THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'RN17: instituicao possui analises e deve permanecer laboratorio';
+        END IF;
+    END IF;
+END$$
+
+CREATE TRIGGER trg_local_preservar_custodia
+BEFORE UPDATE ON local_armazenamento
+FOR EACH ROW
+BEGIN
+    DECLARE v_referencia INT DEFAULT NULL;
+    IF NEW.id_instituicao <> OLD.id_instituicao THEN
+        -- Leitura corrente, inclusive se a transação já estabeleceu snapshot anterior.
+        SELECT 1 INTO v_referencia FROM custodia_artefato
+        WHERE id_local = OLD.id_local AND id_instituicao <> NEW.id_instituicao LIMIT 1 FOR SHARE;
+        IF v_referencia IS NOT NULL THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'RN25: local possui custodias vinculadas a outra instituicao';
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;

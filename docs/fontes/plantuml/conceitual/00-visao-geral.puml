@@ -1,0 +1,114 @@
+@startchen
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 18
+skinparam nodesep 65
+skinparam ranksep 85
+skinparam ArrowColor #3A4653
+skinparam ArrowThickness 1.3
+skinparam EntityBackgroundColor #FFFFFF
+skinparam EntityBorderColor #223447
+skinparam RelationshipBackgroundColor #F1F4F7
+skinparam RelationshipBorderColor #223447
+skinparam AttributeBackgroundColor #FFFFFF
+skinparam AttributeBorderColor #718096
+
+entity "INSTITUIÇÃO" as instituicao {
+}
+entity "PESQUISADOR" as pesquisador {
+}
+entity "ARQUEÓLOGO" as arqueologo {
+}
+entity "CONSERVADOR" as conservador {
+}
+entity "ANALISTA LABORATORIAL" as analista_laboratorial {
+}
+entity "SÍTIO ARQUEOLÓGICO" as sitio_arqueologico {
+}
+entity "CAMPANHA" as campanha {
+}
+entity "UNIDADE DE ESCAVAÇÃO" as unidade_escavacao {
+}
+entity "ARTEFATO" as artefato {
+}
+entity "FRAGMENTO" as fragmento <<weak>> {
+}
+entity "ANÁLISE LABORATORIAL" as analise_laboratorial {
+}
+entity "INTERVENÇÃO DE CONSERVAÇÃO" as intervencao_conservacao {
+}
+entity "LOCAL DE ARMAZENAMENTO" as local_armazenamento {
+}
+entity "CUSTÓDIA DO ARTEFATO" as custodia_artefato {
+}
+pesquisador =>= d { arqueologo, conservador, analista_laboratorial }
+relationship "Vincula" as r_vincula {
+}
+instituicao -(0,N)- r_vincula
+r_vincula -(1,1)- pesquisador
+relationship "Participa" as r_participa {
+}
+pesquisador -(0,N)- r_participa
+r_participa -(0,N)- campanha
+relationship "Recebe" as r_recebe {
+}
+sitio_arqueologico -(0,N)- r_recebe
+r_recebe -(1,1)- campanha
+relationship "Coordena" as r_coordena {
+}
+arqueologo -(0,N)- r_coordena
+r_coordena -(1,1)- campanha
+relationship "Possui" as r_unidades {
+}
+campanha -(0,N)- r_unidades
+r_unidades -(1,1)- unidade_escavacao
+relationship "Revela" as r_revela {
+}
+unidade_escavacao -(0,N)- r_revela
+r_revela -(1,1)- artefato
+relationship "Referencia" as r_referencia {
+}
+artefato -(0,1)- r_referencia
+r_referencia -(0,N)- artefato
+relationship "Compoe" as r_compoe <<identifying>> {
+}
+artefato -(0,N)- r_compoe
+r_compoe =(1,1)= fragmento
+relationship "Executa" as r_executa {
+}
+instituicao -(0,N)- r_executa
+r_executa -(1,1)- analise_laboratorial
+relationship "É analisado em" as r_examina {
+}
+artefato -(0,N)- r_examina
+r_examina -(0,N)- analise_laboratorial
+relationship "Realiza" as r_realiza {
+}
+conservador -(0,N)- r_realiza
+r_realiza -(1,1)- intervencao_conservacao
+relationship "Recebe" as r_intervencoes {
+}
+artefato -(0,N)- r_intervencoes
+r_intervencoes -(1,1)- intervencao_conservacao
+relationship "Possui" as r_locais {
+}
+instituicao -(0,N)- r_locais
+r_locais -(1,1)- local_armazenamento
+relationship "Tem histórico" as r_historico {
+}
+artefato -(0,N)- r_historico
+r_historico -(1,1)- custodia_artefato
+relationship "Assume" as r_assume {
+}
+instituicao -(0,N)- r_assume
+r_assume -(1,1)- custodia_artefato
+relationship "Abriga" as r_abriga {
+}
+local_armazenamento -(0,N)- r_abriga
+r_abriga -(0,1)- custodia_artefato
+relationship "Responsabiliza-se" as r_responsavel {
+}
+pesquisador -(0,N)- r_responsavel
+r_responsavel -(1,1)- custodia_artefato
+@endchen

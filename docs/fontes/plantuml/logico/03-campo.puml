@@ -1,0 +1,90 @@
+@startuml
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 18
+skinparam nodesep 65
+skinparam ranksep 85
+skinparam ArrowColor #3A4653
+skinparam ArrowThickness 1.3
+skinparam EntityBackgroundColor #FFFFFF
+skinparam EntityBorderColor #223447
+skinparam RelationshipBackgroundColor #F1F4F7
+skinparam RelationshipBorderColor #223447
+skinparam AttributeBackgroundColor #FFFFFF
+skinparam AttributeBorderColor #718096
+
+hide circle
+hide methods
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #FFFFFF
+skinparam classBorderColor #223447
+skinparam classFontColor #172B3A
+skinparam classHeaderBackgroundColor #EAF0F5
+entity "sitio_arqueologico" as sitio_arqueologico {
+  * <u>id_sitio</u> : INT [PK]
+  --
+  * nome : VARCHAR(120)
+  * municipio : VARCHAR(80)
+  * uf : CHAR(2)
+  * latitude : DECIMAL(9,6)
+  * longitude : DECIMAL(9,6)
+    periodo_historico : VARCHAR(100)
+  * nivel_protecao : VARCHAR(20)
+  * data_cadastro : DATE
+}
+entity "campanha" as campanha {
+  * <u>id_campanha</u> : INT [PK]
+  --
+  * id_sitio : INT [FK]
+  * id_coordenador : INT [FK]
+  * codigo : VARCHAR(24)
+  * nome : VARCHAR(140)
+  * objetivo : TEXT
+  * data_inicio : DATE
+    data_fim : DATE
+  * situacao : VARCHAR(16)
+  * orcamento : DECIMAL(12,2)
+}
+entity "unidade_escavacao" as unidade_escavacao {
+  * <u>id_unidade</u> : INT [PK]
+  --
+  * id_campanha : INT [FK]
+  * codigo : VARCHAR(20)
+  * setor : VARCHAR(40)
+    nivel_estratigrafico : VARCHAR(40)
+  * data_abertura : DATE
+    data_encerramento : DATE
+}
+entity "artefato" as artefato {
+  * <u>id_artefato</u> : INT [PK]
+  --
+  * id_unidade : INT [FK]
+    id_artefato_referencia : INT [FK]
+  * codigo_catalogo : VARCHAR(32)
+  * nome : VARCHAR(120)
+  * descricao : TEXT
+  * material : VARCHAR(60)
+    periodo_estimado : VARCHAR(100)
+  * data_descoberta : DATE
+  * profundidade_cm : DECIMAL(7,2)
+  * estado_conservacao : VARCHAR(16)
+  * situacao : VARCHAR(18)
+}
+entity "fragmento" as fragmento {
+  * <u>id_artefato</u> : INT [PK/FK]
+  * <u>numero_fragmento</u> : SMALLINT [PK]
+  --
+  * peso_g : DECIMAL(9,3)
+    comprimento_mm : DECIMAL(8,2)
+    descricao : VARCHAR(240)
+  * localizado : BOOLEAN
+}
+sitio_arqueologico ||--o{ campanha : id_sitio
+campanha ||--o{ unidade_escavacao : id_campanha
+unidade_escavacao ||--o{ artefato : id_unidade
+artefato |o--o{ artefato : id_artefato_referencia
+artefato ||--o{ fragmento : id_artefato
+@enduml

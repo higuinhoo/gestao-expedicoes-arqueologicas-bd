@@ -2,6 +2,10 @@
 
 Projeto da Etapa 1 da disciplina Laboratório de Banco de Dados, semestre 2026/2, revisado conforme a devolutiva C1–C5 em 18/10/2026. A implementação da aplicação da Etapa 2 será realizada posteriormente.
 
+## MER editável no draw.io
+
+A [nova versão `.drawio`](docs/fontes/mer-conceitual.drawio) possui uma visão completa e quatro abas de detalhe, com posicionamento organizado e objetos editáveis. Consulte a [prévia em PDF](docs/mer-drawio-previa.pdf) e as [instruções para abrir no diagrams.net](docs/como-abrir-mer-drawio.md).
+
 ## Integrantes
 
 - Arthur Tavares Silva

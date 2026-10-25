@@ -22,4 +22,3 @@ REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'consulta'@'%';
 GRANT 'arqueologia_consulta' TO 'consulta'@'%';
 SET DEFAULT ROLE 'arqueologia_consulta' TO 'consulta'@'%';
 INSERT INTO usuario_app(login,nome,perfil,senha_hash,ativo) VALUES ('consulta','Consulta publica','CONSULTA','pbkdf2_sha256$600000$ZzIFwdVnZ515/MLIWImLmQ==$M4gPAu+j7uGpFRhWssA4WrQeFmGxPdpZVlOnfCZ5t9Q=',TRUE) ON DUPLICATE KEY UPDATE nome=VALUES(nome),perfil=VALUES(perfil),senha_hash=VALUES(senha_hash),ativo=TRUE;
-

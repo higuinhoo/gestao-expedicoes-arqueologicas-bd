@@ -1,0 +1,5 @@
+MySQL 8.4.11; execução 2026-10-18T19:59:06.478474837Z
+acervo,2,2.1342,1.5911,1.9641,3.1041,1.4991,2.1131,25.45
+analises,1,4.9915,2.6145,4.4602,7.4612,2.5092,2.7781,47.62
+custodia,20108,161.6017,124.2144,146.5561,200.4218,117.3406,135.6830,23.14
+Duas passagens de aquecimento e sete medições por fase; tempos JDBC incluem leitura integral do resultado. Sinal positivo indica redução da mediana.

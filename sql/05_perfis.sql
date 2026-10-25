@@ -1,0 +1,37 @@
+-- B5: papéis do MySQL. Usuários e senhas reais são provisionados fora do Git.
+-- O script é reexecutável; REVOKE recompõe a matriz em vez de acumular privilégios.
+CREATE ROLE IF NOT EXISTS 'arqueologia_admin', 'arqueologia_catalogador', 'arqueologia_consulta';
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'arqueologia_admin','arqueologia_catalogador','arqueologia_consulta';
+GRANT SELECT ON arqueologia_ucb.vw_minha_conta TO 'arqueologia_admin','arqueologia_catalogador','arqueologia_consulta';
+GRANT SELECT ON arqueologia_ucb.vw_acervo_consulta TO 'arqueologia_consulta','arqueologia_catalogador','arqueologia_admin';
+GRANT SELECT ON arqueologia_ucb.vw_analises_consulta TO 'arqueologia_consulta','arqueologia_catalogador','arqueologia_admin';
+GRANT SELECT ON arqueologia_ucb.vw_relatorio_custodia TO 'arqueologia_consulta','arqueologia_catalogador','arqueologia_admin';
+GRANT SELECT ON arqueologia_ucb.vw_pesquisadores_referencia TO 'arqueologia_catalogador','arqueologia_admin';
+GRANT SELECT ON arqueologia_ucb.auditoria TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.instituicao TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.pesquisador TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.arqueologo TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.conservador TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.analista_laboratorial TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.sitio_arqueologico TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.campanha TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.participacao_campanha TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.unidade_escavacao TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.artefato TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.fragmento TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.analise_laboratorial TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.artefato_analise TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.intervencao_conservacao TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.local_armazenamento TO 'arqueologia_admin';
+GRANT SELECT, INSERT, UPDATE ON arqueologia_ucb.custodia_artefato TO 'arqueologia_admin';
+GRANT SELECT ON arqueologia_ucb.instituicao TO 'arqueologia_catalogador';
+GRANT SELECT ON arqueologia_ucb.sitio_arqueologico TO 'arqueologia_catalogador';
+GRANT SELECT ON arqueologia_ucb.unidade_escavacao TO 'arqueologia_catalogador';
+GRANT SELECT ON arqueologia_ucb.analise_laboratorial TO 'arqueologia_catalogador';
+GRANT SELECT ON arqueologia_ucb.fragmento TO 'arqueologia_catalogador';
+GRANT SELECT ON arqueologia_ucb.artefato_analise TO 'arqueologia_catalogador';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.campanha TO 'arqueologia_catalogador';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.artefato TO 'arqueologia_catalogador';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.local_armazenamento TO 'arqueologia_catalogador';
+GRANT SELECT, INSERT, UPDATE, DELETE ON arqueologia_ucb.participacao_campanha TO 'arqueologia_catalogador';
+GRANT SELECT, INSERT, UPDATE ON arqueologia_ucb.custodia_artefato TO 'arqueologia_catalogador';

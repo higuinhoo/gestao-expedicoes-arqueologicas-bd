@@ -1,0 +1,35 @@
+{
+  "classes": [
+    {
+      "name": "br.edu.ucb.arqueologia.IntegrationTest",
+      "tests": "10",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "2.616"
+    },
+    {
+      "name": "br.edu.ucb.arqueologia.PasswordsTest",
+      "tests": "1",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "0.895"
+    },
+    {
+      "name": "br.edu.ucb.arqueologia.SwingSmokeTest",
+      "tests": "2",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "3.674"
+    }
+  ],
+  "total": 13,
+  "falhas": 0,
+  "erros": 0,
+  "ignorados": 0,
+  "java": "openjdk version \"17.0.17\" 2025-10-21",
+  "base": "MySQL 8.4.11 em container descartável",
+  "interface_real": true
+}

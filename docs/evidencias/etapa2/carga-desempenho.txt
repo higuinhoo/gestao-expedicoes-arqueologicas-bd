@@ -1,0 +1,6 @@
+{"artefatos_adicionais": 20000, "analises_adicionais": 20000, "associacoes_adicionais": 40000, "custodias_adicionais": 100000}
+tabela	registros
+artefato	20108
+analise_laboratorial	20045
+artefato_analise	40100
+custodia_artefato	100131

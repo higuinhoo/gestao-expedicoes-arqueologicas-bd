@@ -1,0 +1,8 @@
+Experimento observado em 2026-10-18T19:59:05.146584286Z
+Sessão A: id=366, isolamento=READ-COMMITTED
+Sessão B: id=367, isolamento=READ-COMMITTED
+A: BEGIN; SELECT id_artefato FROM artefato WHERE id_artefato=1 FOR UPDATE; lock adquirido.
+B: SELECT FOR UPDATE permanece pendente após 900 ms.
+Observação performance_schema: {OBJECT_NAME=artefato, INDEX_NAME=PRIMARY, LOCK_TYPE=RECORD, LOCK_MODE=X,REC_NOT_GAP, LOCK_STATUS=WAITING}
+A: COMMIT, liberando o lock.
+B: lock adquirido após 923.660 ms; ROLLBACK. Nenhum dado foi alterado.

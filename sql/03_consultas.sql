@@ -152,6 +152,9 @@ WHERE co.posicao = 1
 ORDER BY a.codigo_catalogo;
 
 -- 15) Quais registros violam regras semânticas que dependem de mais de uma tabela?
+-- Revisão operacional: inativação posterior não invalida participação histórica.
+-- RN04 é validada na entrada por SQL/04_operacao.sql; o estado atual sozinho
+-- não informa a situação do pesquisador na data em que ele entrou na campanha.
 -- A consulta reúne coordenadores não arqueólogos, laboratórios com tipo incorreto,
 -- conservadores incompatíveis e locais de custódia pertencentes a outra instituição.
 SELECT 'COORDENADOR_NAO_ARQUEOLOGO' AS problema,
@@ -177,13 +180,6 @@ SELECT 'LOCAL_FORA_DA_INSTITUICAO',
 FROM custodia_artefato AS ca
 INNER JOIN local_armazenamento AS l ON l.id_local = ca.id_local
 WHERE l.id_instituicao <> ca.id_instituicao
-UNION ALL
-SELECT 'PESQUISADOR_INATIVO_EM_CAMPANHA',
-       c.codigo, p.nome
-FROM participacao_campanha AS pc
-INNER JOIN campanha AS c ON c.id_campanha = pc.id_campanha
-INNER JOIN pesquisador AS p ON p.id_pesquisador = pc.id_pesquisador
-WHERE p.situacao <> 'ATIVO'
 UNION ALL
 SELECT 'ESPECIALIZACAO_INCONSISTENTE',
        CAST(p.id_pesquisador AS CHAR CHARACTER SET utf8mb4) COLLATE utf8mb4_unicode_ci, p.nome

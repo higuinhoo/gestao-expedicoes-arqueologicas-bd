@@ -1,0 +1,20 @@
+Evidências em 2026-10-18T20:14:32.733128610Z
+Login real: admin; perfil=ADMIN; CURRENT_ROLE=`arqueologia_admin`@`%`
+Contas visíveis na view restrita=1
+Linhas visíveis no relatório público=20110
+Login real: catalogador; perfil=CATALOGADOR; CURRENT_ROLE=`arqueologia_catalogador`@`%`
+Contas visíveis na view restrita=1
+Linhas visíveis no relatório público=20110
+Login real: consulta; perfil=CONSULTA; CURRENT_ROLE=`arqueologia_consulta`@`%`
+Contas visíveis na view restrita=1
+Linhas visíveis no relatório público=20110
+Consulta a e-mail negada ao leitor: código=1142; Seu perfil não tem permissão para esta operação.
+UPDATE negado ao leitor: código=1142; Seu perfil não tem permissão para esta operação.
+SQL injection: entrada=Cerâmica' OR 1=1 #; linhas obtidas=0; consulta permaneceu parametrizada.
+Com_stmt_prepare antes/depois=3/5 (preparo observado no servidor).
+Operação em READ COMMITTED; SELECT artefato FOR UPDATE; UPDATE custódia; INSERT custódia; UPDATE artefato; COMMIT/ROLLBACK.
+Estado antes=[[{situacao=CATALOGADO}], [{id_custodia=100136, id_instituicao=1, data_inicio=2026-10-01, data_fim=null}]]
+Falha após UPDATE da custódia anterior: Falha simulada após encerrar a custódia anterior. Todas as alterações foram desfeitas.
+Estado após ROLLBACK=[[{situacao=CATALOGADO}], [{id_custodia=100136, id_instituicao=1, data_inicio=2026-10-01, data_fim=null}]]; igualdade comprovada.
+Estado após COMMIT=[[{situacao=ARMAZENADO}], [{id_custodia=100136, id_instituicao=1, data_inicio=2026-10-01, data_fim=2026-10-18}, {id_custodia=100137, id_instituicao=2, data_inicio=2026-10-18, data_fim=null}]]
+Auditoria confirmada=[{usuario_aplicacao=2:catalogador, usuario_banco=catalogador@172.17.0.1, instante=2026-10-18 20:14:33.014217, tabela=custodia_artefato, valores_anteriores={"fim": null, "local": 1, "inicio": "2026-10-01", "motivo": "Recebimento sintético", "artefato": 30002, "documento": "INI-623cd1af", "instituicao": 1, "responsavel": 1}, valores_posteriores={"fim": "2026-10-18", "local": 1, "inicio": "2026-10-01", "motivo": "Recebimento sintético", "artefato": 30002, "documento": "INI-623cd1af", "instituicao": 1, "responsavel": 1}}, {usuario_aplicacao=2:catalogador, usuario_banco=catalogador@172.17.0.1, instante=2026-10-18 20:14:33.016847, tabela=artefato, valores_anteriores={"nome": "Artefato sintético para demonstração", "estado": "ESTAVEL", "periodo": null, "catalogo": "EVID-623cd1af", "material": "Cerâmica", "situacao": "CATALOGADO", "descricao": "Evidência controlada de transação.", "descoberta": "2026-09-01", "id_unidade": 1, "referencia": null, "profundidade": 10.00}, valores_posteriores={"nome": "Artefato sintético para demonstração", "estado": "ESTAVEL", "periodo": null, "catalogo": "EVID-623cd1af", "material": "Cerâmica", "situacao": "ARMAZENADO", "descricao": "Evidência controlada de transação.", "descoberta": "2026-09-01", "id_unidade": 1, "referencia": null, "profundidade": 10.00}}]

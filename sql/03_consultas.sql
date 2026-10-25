@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- ============================================================
 -- 03_consultas.sql
 -- Quinze consultas de verificação comentadas por pergunta de negócio

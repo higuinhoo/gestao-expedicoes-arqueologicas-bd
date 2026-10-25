@@ -1,0 +1,25 @@
+name: arqueologia-demo
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ARQ_MYSQL_ROOT_PASSWORD:-arqueologia-root-demo}
+    ports:
+      - "127.0.0.1:${ARQ_DB_PORT:-33319}:3306"
+    volumes:
+      - dados:/var/lib/mysql
+      - ./sql/01_ddl.sql:/docker-entrypoint-initdb.d/01_ddl.sql:ro
+      - ./sql/02_carga.sql:/docker-entrypoint-initdb.d/02_carga.sql:ro
+      - ./sql/03_consultas.sql:/docker-entrypoint-initdb.d/03_consultas.sql:ro
+      - ./sql/04_operacao.sql:/docker-entrypoint-initdb.d/04_operacao.sql:ro
+      - ./sql/05_perfis.sql:/docker-entrypoint-initdb.d/05_perfis.sql:ro
+      - ./sql/06_indices_desempenho.sql:/docker-entrypoint-initdb.d/06_indices.sql:ro
+      - ./demo/07_usuarios.sql:/docker-entrypoint-initdb.d/07_usuarios.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$${MYSQL_ROOT_PASSWORD}\" mysql --protocol=TCP -h127.0.0.1 -uroot --database=arqueologia_ucb --execute='SELECT COUNT(*) FROM usuario_app' --silent"]
+      start_period: 30s
+      interval: 3s
+      timeout: 5s
+      retries: 50
+volumes:
+  dados:

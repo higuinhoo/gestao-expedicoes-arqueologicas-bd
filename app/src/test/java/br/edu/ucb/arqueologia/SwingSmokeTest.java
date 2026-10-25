@@ -5,7 +5,7 @@ import javax.swing.*;import java.awt.*;import java.nio.file.*;import java.util.*
 @EnabledIfEnvironmentVariable(named="ARQ_TEST_ADMIN_PASSWORD",matches=".+")
 @EnabledIfEnvironmentVariable(named="DISPLAY",matches=".+")
 class SwingSmokeTest {
-    static final Path EVIDENCE=Path.of("../docs/evidencias/etapa2");
+    static final Path EVIDENCE=Path.of(System.getProperty("arq.evidenceDir","../docs/evidencias/etapa2"));
     static <T>T edt(Callable<T> callable)throws Exception{AtomicReference<T> result=new AtomicReference<>();AtomicReference<Exception> error=new AtomicReference<>();SwingUtilities.invokeAndWait(()->{try{result.set(callable.call());}catch(Exception ex){error.set(ex);}});if(error.get()!=null)throw error.get();return result.get();}
     static Component find(Component c,String name){if(name.equals(c.getName()))return c;if(c instanceof Container parent)for(Component child:parent.getComponents()){Component hit=find(child,name);if(hit!=null)return hit;}return null;}
     static <T extends Component>T named(Component root,String name,Class<T> type){Component c=find(root,name);assertNotNull(c,name);return type.cast(c);}

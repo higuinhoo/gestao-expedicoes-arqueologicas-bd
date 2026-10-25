@@ -12,7 +12,10 @@ public final class MainFrame extends JFrame {
         tabs.addTab("Custódia atual",listing("Relatório consolidado alimentado pela visão do banco.",()->reports.consolidated(session)));
         if(session.role().writes()){tabs.addTab("Transferir custódia",new TransferPanel(session,new CustodyService(db)));tabs.addTab("Equipe de campanha",new TeamPanel(session,new TeamService(db)));}
         if(session.role()==Role.ADMIN)tabs.addTab("Auditoria",listing("Alterações de artefatos e custódias, com autor e valores anterior/posterior.",()->reports.audit(session)));
-        tabs.addChangeListener(e->{if(tabs.getSelectedComponent() instanceof CrudPanel panel)panel.reload();});
+        tabs.addChangeListener(e->{
+            if(tabs.getSelectedComponent() instanceof CrudPanel panel)panel.reload();
+            else if(tabs.getSelectedComponent() instanceof TransferPanel panel)panel.reload();
+        });
         add(header,BorderLayout.NORTH);add(tabs,BorderLayout.CENTER);addWindowListener(new WindowAdapter(){@Override public void windowClosed(WindowEvent e){session.close();}});
         SwingUtilities.invokeLater(()->{if(tabs.getSelectedComponent() instanceof CrudPanel panel)panel.reload();});
     }

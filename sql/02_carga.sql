@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- ============================================================
 -- 02_carga.sql
 -- Dados integralmente fictícios para fins acadêmicos

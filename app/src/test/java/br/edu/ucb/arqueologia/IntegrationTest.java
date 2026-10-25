@@ -18,6 +18,11 @@ class IntegrationTest {
     static Map<String,Object> campaign(String name){Map<String,Object> r=new LinkedHashMap<>();r.put("id_sitio",1);r.put("id_coordenador",1);r.put("codigo","T-"+unique());r.put("nome",name);r.put("objetivo","Pesquisa sintética de integração");r.put("data_inicio",LocalDate.of(2026,1,1));r.put("data_fim",null);r.put("situacao","PLANEJADA");r.put("orcamento",1000);return r;}
     static Map<String,Object> artifact(String name){Map<String,Object> r=new LinkedHashMap<>();r.put("id_unidade",1);r.put("id_artefato_referencia",null);r.put("codigo_catalogo","T-"+unique());r.put("nome",name);r.put("descricao","Objeto sintético de teste");r.put("material","Cerâmica");r.put("periodo_estimado",null);r.put("data_descoberta",LocalDate.of(2026,9,1));r.put("profundidade_cm",10);r.put("estado_conservacao","ESTAVEL");r.put("situacao","CATALOGADO");return r;}
     static Map<String,Object> location(String name){return new LinkedHashMap<>(Map.of("id_instituicao",1,"codigo",name,"tipo","Reserva técnica","temperatura_c",20,"umidade_percentual",50,"capacidade",100));}
+    @Test void seededTextPreservesAccentsAcrossMysqlInitialization()throws Exception{
+        try(Connection c=db.open(admin)){
+            assertEquals("Campanha de prospecção Abrigo Pedra Clara 2025",Database.scalar(c,"SELECT nome FROM campanha WHERE id_campanha=1"));
+        }
+    }
     @Test void fourCompleteCruds()throws Exception{
         var specs=List.of(EntitySpec.PESQUISADORES,EntitySpec.CAMPANHAS,EntitySpec.ARTEFATOS,EntitySpec.LOCAIS);
         var values=List.of(researcher("Pessoa-"+unique()),campaign("Campanha-"+unique()),artifact("Objeto-"+unique()),location("L-"+unique()));

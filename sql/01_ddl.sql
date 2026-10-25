@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- ============================================================
 -- 01_ddl.sql
 -- Sistema de Gestão de Expedições Arqueológicas

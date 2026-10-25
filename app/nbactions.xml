@@ -3,6 +3,6 @@
   <action>
     <actionName>run</actionName>
     <goals><goal>process-classes</goal><goal>org.codehaus.mojo:exec-maven-plugin:3.5.0:exec</goal></goals>
-    <properties><exec.executable>java</exec.executable><exec.args>-classpath %classpath br.edu.ucb.arqueologia.App</exec.args><exec.workingdir>${project.basedir}</exec.workingdir></properties>
+    <properties><exec.executable>${java.home}/bin/java</exec.executable><exec.args>-classpath %classpath br.edu.ucb.arqueologia.App</exec.args><exec.workingdir>${project.basedir}</exec.workingdir></properties>
   </action>
 </actions>

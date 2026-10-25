@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- B5: papéis do MySQL. Usuários e senhas reais são provisionados fora do Git.
 -- O script é reexecutável; REVOKE recompõe a matriz em vez de acumular privilégios.
 CREATE ROLE IF NOT EXISTS 'arqueologia_admin', 'arqueologia_catalogador', 'arqueologia_consulta';

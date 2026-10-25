@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- Etapa 2: complementa o DDL autoral; execute depois de 01, 02 e 03.
 USE arqueologia_ucb;
 CREATE TABLE IF NOT EXISTS usuario_app (

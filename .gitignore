@@ -9,3 +9,5 @@ app/config.properties
 local/
 *.log
 backups/
+.env
+.env.*

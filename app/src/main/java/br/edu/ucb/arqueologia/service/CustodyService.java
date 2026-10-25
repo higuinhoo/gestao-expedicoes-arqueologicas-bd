@@ -34,7 +34,7 @@ public final class CustodyService {
             Map<String,List<Map<String,Object>>> rows=new HashMap<>();
             rows.put("artifact",Database.query(c,"SELECT id_artefato,codigo_catalogo FROM artefato ORDER BY codigo_catalogo"));
             rows.put("institution",Database.query(c,"SELECT id_instituicao,nome FROM instituicao ORDER BY nome"));
-            rows.put("location",Database.query(c,"SELECT l.id_local,CONCAT(i.nome,' / ',l.codigo) AS local FROM local_armazenamento l JOIN instituicao i ON i.id_instituicao=l.id_instituicao ORDER BY i.nome,l.codigo"));
+            rows.put("location",Database.query(c,"SELECT l.id_local,CONCAT(i.nome,' / ',l.codigo) AS local,l.id_instituicao FROM local_armazenamento l JOIN instituicao i ON i.id_instituicao=l.id_instituicao ORDER BY i.nome,l.codigo"));
             rows.put("responsible",Database.query(c,"SELECT id_pesquisador,nome FROM vw_pesquisadores_referencia WHERE situacao='ATIVO' ORDER BY nome"));return rows;
         }
     }

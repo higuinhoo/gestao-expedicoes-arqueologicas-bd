@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- B4: índices estudados em base limpa (crie uma vez após 04/05).
 -- A medição remove somente estes três índices antes da etapa "antes".
 USE arqueologia_ucb;

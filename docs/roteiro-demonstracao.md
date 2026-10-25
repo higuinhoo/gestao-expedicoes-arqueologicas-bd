@@ -2,8 +2,8 @@
 
 ## Preparação
 
-1. Reconstruir a base didática pelos scripts 01 a 06, provisionar as três contas com senhas próprias e validar os acessos antes da apresentação.
-2. Abrir o projeto Maven app/ no NetBeans usando JDK 17+, copiar a configuração externa e executar br.edu.ucb.arqueologia.App; alternativamente usar iniciar.sh/iniciar.bat e o JAR pronto.
+1. Executar iniciar.bat (Windows) ou sh iniciar.sh (Linux/macOS) antes da apresentação. O ambiente demo prepara a base, a configuração e os acessos admin/admin, catalogador/catalogador e consulta/consulta, preservando os dados nas próximas inicializações.
+2. Para NetBeans, executar preparar-netbeans.bat ou sh iniciar.sh --prepare-only; abrir app/ com JDK 17+ e executar br.edu.ucb.arqueologia.App. Os arquivos de acessos pessoais não precisam ser projetados. O roteiro abaixo também pode ser executado diretamente pelo JAR iniciado automaticamente.
 3. Manter duas sessões MySQL autenticadas para o experimento de concorrência. Não usar uma conexão única com duas abas que compartilhem a mesma sessão. Confirmar com SELECT CONNECTION_ID().
 4. Preparar um artefato sintético novo, com situação CATALOGADO e uma custódia anterior em data menor que a transferência. Para criar essa custódia inicial, usar a tela Transferir custódia quando ainda não há custódia vigente. Datas podem ser ajustadas à apresentação; não tentar dois inícios no mesmo dia para o mesmo artefato.
 5. Separar a base grande de desempenho da base didática da aplicação. Ter abertos os planos antes/depois e a tabela de medições; não executar carga de 20 mil artefatos enquanto demonstra cadastros.

@@ -1,64 +1,67 @@
+%% Fonte auxiliar; PDF canônico gerado a partir do DOT por scripts/gerar_modelos.py.
+%% T,X no supertipo: especialização TOTAL e EXCLUSIVA. ISA não é uma entidade.
+%% Campos entre aspas no MER marcam identificadores/derivação; tipos são domínios conceituais.
 erDiagram
     INSTITUICAO {
         INT id_instituicao PK
-        VARCHAR nome UK
-        VARCHAR sigla
-        VARCHAR tipo
-        VARCHAR pais
-        CHAR uf
-        VARCHAR cidade
+        VARCHAR_120 nome
+        VARCHAR_20 sigla
+        VARCHAR_20 tipo
+        VARCHAR_60 pais
+        CHAR_2 uf
+        VARCHAR_80 cidade
     }
     PESQUISADOR {
         INT id_pesquisador PK
         INT id_instituicao FK
-        VARCHAR nome
-        VARCHAR email UK
-        VARCHAR registro_profissional UK
-        VARCHAR tipo_especializacao
-        VARCHAR situacao
+        VARCHAR_120 nome
+        VARCHAR_160 email
+        VARCHAR_40 registro_profissional
+        VARCHAR_24 tipo_especializacao
+        VARCHAR_10 situacao
     }
     ARQUEOLOGO {
         INT id_pesquisador PK,FK
-        VARCHAR area_pesquisa
-        VARCHAR numero_autorizacao UK
+        VARCHAR_100 area_pesquisa
+        VARCHAR_40 numero_autorizacao
     }
     CONSERVADOR {
         INT id_pesquisador PK,FK
-        VARCHAR especialidade_material
-        VARCHAR numero_registro UK
+        VARCHAR_80 especialidade_material
+        VARCHAR_40 numero_registro
     }
     ANALISTA_LABORATORIAL {
         INT id_pesquisador PK,FK
-        VARCHAR especialidade_analise
-        VARCHAR nivel_formacao
+        VARCHAR_100 especialidade_analise
+        VARCHAR_30 nivel_formacao
     }
     SITIO_ARQUEOLOGICO {
         INT id_sitio PK
-        VARCHAR nome UK
-        VARCHAR municipio
-        CHAR uf
-        DECIMAL latitude
-        DECIMAL longitude
-        VARCHAR periodo_historico
-        VARCHAR nivel_protecao
+        VARCHAR_120 nome
+        VARCHAR_80 municipio
+        CHAR_2 uf
+        DECIMAL_9_6 latitude
+        DECIMAL_9_6 longitude
+        VARCHAR_100 periodo_historico
+        VARCHAR_20 nivel_protecao
         DATE data_cadastro
     }
     CAMPANHA {
         INT id_campanha PK
         INT id_sitio FK
         INT id_coordenador FK
-        VARCHAR codigo UK
-        VARCHAR nome
+        VARCHAR_24 codigo
+        VARCHAR_140 nome
         TEXT objetivo
         DATE data_inicio
         DATE data_fim
-        VARCHAR situacao
-        DECIMAL orcamento
+        VARCHAR_16 situacao
+        DECIMAL_12_2 orcamento
     }
     PARTICIPACAO_CAMPANHA {
         INT id_campanha PK,FK
         INT id_pesquisador PK,FK
-        VARCHAR funcao
+        VARCHAR_60 funcao
         DATE data_entrada
         DATE data_saida
         SMALLINT horas_previstas
@@ -66,9 +69,9 @@ erDiagram
     UNIDADE_ESCAVACAO {
         INT id_unidade PK
         INT id_campanha FK
-        VARCHAR codigo UK
-        VARCHAR setor
-        VARCHAR nivel_estratigrafico
+        VARCHAR_20 codigo
+        VARCHAR_40 setor
+        VARCHAR_40 nivel_estratigrafico
         DATE data_abertura
         DATE data_encerramento
     }
@@ -76,61 +79,61 @@ erDiagram
         INT id_artefato PK
         INT id_unidade FK
         INT id_artefato_referencia FK
-        VARCHAR codigo_catalogo UK
-        VARCHAR nome
+        VARCHAR_32 codigo_catalogo
+        VARCHAR_120 nome
         TEXT descricao
-        VARCHAR material
-        VARCHAR periodo_estimado
+        VARCHAR_60 material
+        VARCHAR_100 periodo_estimado
         DATE data_descoberta
-        DECIMAL profundidade_cm
-        VARCHAR estado_conservacao
-        VARCHAR situacao
+        DECIMAL_7_2 profundidade_cm
+        VARCHAR_16 estado_conservacao
+        VARCHAR_18 situacao
     }
     FRAGMENTO {
         INT id_artefato PK,FK
         SMALLINT numero_fragmento PK
-        DECIMAL peso_g
-        DECIMAL comprimento_mm
-        VARCHAR descricao
+        DECIMAL_9_3 peso_g
+        DECIMAL_8_2 comprimento_mm
+        VARCHAR_240 descricao
         BOOLEAN localizado
     }
     ANALISE_LABORATORIAL {
         INT id_analise PK
         INT id_laboratorio FK
-        VARCHAR tipo_analise
-        VARCHAR metodo
+        VARCHAR_60 tipo_analise
+        VARCHAR_120 metodo
         DATE data_inicio
         DATE data_fim
-        VARCHAR situacao
-        DECIMAL custo
+        VARCHAR_16 situacao
+        DECIMAL_10_2 custo
     }
     ARTEFATO_ANALISE {
         INT id_artefato PK,FK
         INT id_analise PK,FK
-        VARCHAR codigo_amostra UK
-        DECIMAL massa_consumida_g
-        VARCHAR resultado_resumido
+        VARCHAR_32 codigo_amostra
+        DECIMAL_8_3 massa_consumida_g
+        VARCHAR_300 resultado_resumido
         TEXT conclusao
     }
     INTERVENCAO_CONSERVACAO {
         INT id_intervencao PK
         INT id_artefato FK
         INT id_conservador FK
-        VARCHAR tipo_intervencao
+        VARCHAR_80 tipo_intervencao
         DATE data_inicio
         DATE data_fim
         TEXT descricao
-        VARCHAR material_aplicado
-        VARCHAR situacao
-        DECIMAL custo
+        VARCHAR_160 material_aplicado
+        VARCHAR_16 situacao
+        DECIMAL_10_2 custo
     }
     LOCAL_ARMAZENAMENTO {
         INT id_local PK
         INT id_instituicao FK
-        VARCHAR codigo UK
-        VARCHAR tipo
-        DECIMAL temperatura_c
-        DECIMAL umidade_percentual
+        VARCHAR_24 codigo
+        VARCHAR_30 tipo
+        DECIMAL_5_2 temperatura_c
+        DECIMAL_5_2 umidade_percentual
         INT capacidade
     }
     CUSTODIA_ARTEFATO {
@@ -141,29 +144,29 @@ erDiagram
         INT id_responsavel FK
         DATE data_inicio
         DATE data_fim
-        VARCHAR documento_movimentacao UK
-        VARCHAR motivo
-        INT_GERADO id_artefato_em_aberto UK
+        VARCHAR_40 documento_movimentacao
+        VARCHAR_200 motivo
+        INT id_artefato_em_aberto
     }
-    INSTITUICAO ||--o{ PESQUISADOR : vincula
-    PESQUISADOR ||--o| ARQUEOLOGO : "ISA total exclusiva"
-    PESQUISADOR ||--o| CONSERVADOR : "ISA total exclusiva"
-    PESQUISADOR ||--o| ANALISTA_LABORATORIAL : "ISA total exclusiva"
-    SITIO_ARQUEOLOGICO ||--o{ CAMPANHA : recebe
-    PESQUISADOR ||--o{ CAMPANHA : coordena
-    CAMPANHA ||--o{ PARTICIPACAO_CAMPANHA : possui
-    PESQUISADOR ||--o{ PARTICIPACAO_CAMPANHA : integra
-    CAMPANHA ||--|{ UNIDADE_ESCAVACAO : divide_se
-    UNIDADE_ESCAVACAO ||--o{ ARTEFATO : revela
-    ARTEFATO o|--o{ ARTEFATO : referencia
-    ARTEFATO ||--|{ FRAGMENTO : compoe
-    INSTITUICAO ||--o{ ANALISE_LABORATORIAL : executa
-    ARTEFATO ||--o{ ARTEFATO_ANALISE : participa
-    ANALISE_LABORATORIAL ||--o{ ARTEFATO_ANALISE : examina
-    ARTEFATO ||--o{ INTERVENCAO_CONSERVACAO : recebe
-    CONSERVADOR ||--o{ INTERVENCAO_CONSERVACAO : realiza
-    INSTITUICAO ||--o{ LOCAL_ARMAZENAMENTO : possui
-    ARTEFATO ||--o{ CUSTODIA_ARTEFATO : historico
-    INSTITUICAO ||--o{ CUSTODIA_ARTEFATO : assume
-    LOCAL_ARMAZENAMENTO o|--o{ CUSTODIA_ARTEFATO : abriga
-    PESQUISADOR ||--o{ CUSTODIA_ARTEFATO : responde
+    INSTITUICAO ||--o{ PESQUISADOR : "vincula"
+    PESQUISADOR ||--o| ARQUEOLOGO : "ISA"
+    PESQUISADOR ||--o| CONSERVADOR : "ISA"
+    PESQUISADOR ||--o| ANALISTA_LABORATORIAL : "ISA"
+    SITIO_ARQUEOLOGICO ||--o{ CAMPANHA : "recebe"
+    PESQUISADOR ||--o{ CAMPANHA : "coordena [RN08]"
+    CAMPANHA ||--o{ PARTICIPACAO_CAMPANHA : "possui"
+    PESQUISADOR ||--o{ PARTICIPACAO_CAMPANHA : "integra"
+    CAMPANHA ||--o{ UNIDADE_ESCAVACAO : "divide-se"
+    UNIDADE_ESCAVACAO ||--o{ ARTEFATO : "revela"
+    ARTEFATO |o--o{ ARTEFATO : "referência"
+    ARTEFATO ||--o{ FRAGMENTO : "compõe / identificador"
+    INSTITUICAO ||--o{ ANALISE_LABORATORIAL : "executa [RN17]"
+    ARTEFATO ||--o{ ARTEFATO_ANALISE : "participa"
+    ANALISE_LABORATORIAL ||--o{ ARTEFATO_ANALISE : "examina"
+    ARTEFATO ||--o{ INTERVENCAO_CONSERVACAO : "recebe"
+    PESQUISADOR ||--o{ INTERVENCAO_CONSERVACAO : "responsável conservador [RN20]"
+    INSTITUICAO ||--o{ LOCAL_ARMAZENAMENTO : "possui"
+    ARTEFATO ||--o{ CUSTODIA_ARTEFATO : "histórico datado"
+    INSTITUICAO ||--o{ CUSTODIA_ARTEFATO : "assume"
+    LOCAL_ARMAZENAMENTO |o--o{ CUSTODIA_ARTEFATO : "abriga [RN25]"
+    PESQUISADOR ||--o{ CUSTODIA_ARTEFATO : "responde"

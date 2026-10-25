@@ -1,123 +1,157 @@
-%% Modelo conceitual completo em notação de Engenharia da Informação.
-%% Especialização de PESQUISADOR: TOTAL e EXCLUSIVA (T, X).
+%% Fonte auxiliar; PDF canônico gerado a partir do DOT por scripts/gerar_modelos.py.
+%% T,X no supertipo: especialização TOTAL e EXCLUSIVA. ISA não é uma entidade.
+%% Campos entre aspas no MER marcam identificadores/derivação; tipos são domínios conceituais.
 erDiagram
     INSTITUICAO {
-        int id_instituicao PK
+        number id_instituicao PK
         string nome
+        string sigla
         string tipo
+        string pais
+        string uf
         string cidade
     }
     PESQUISADOR {
-        int id_pesquisador PK
+        number id_pesquisador PK
         string nome
         string email
+        string registro_profissional
         string tipo_especializacao
         string situacao
     }
     ARQUEOLOGO {
-        int id_pesquisador PK
+        number id_pesquisador PK,FK
         string area_pesquisa
         string numero_autorizacao
     }
     CONSERVADOR {
-        int id_pesquisador PK
+        number id_pesquisador PK,FK
         string especialidade_material
         string numero_registro
     }
     ANALISTA_LABORATORIAL {
-        int id_pesquisador PK
+        number id_pesquisador PK,FK
         string especialidade_analise
         string nivel_formacao
     }
     SITIO_ARQUEOLOGICO {
-        int id_sitio PK
+        number id_sitio PK
         string nome
-        string localizacao
+        string municipio
+        string uf
+        number latitude
+        number longitude
+        string periodo_historico
         string nivel_protecao
+        date data_cadastro
     }
     CAMPANHA {
-        int id_campanha PK
+        number id_campanha PK
         string codigo
-        string periodo
+        string nome
+        string objetivo
+        date data_inicio
+        date data_fim
         string situacao
+        number orcamento
     }
     PARTICIPACAO_CAMPANHA {
-        int id_campanha PK
-        int id_pesquisador PK
+        number id_campanha PK,FK
+        number id_pesquisador PK,FK
         string funcao
-        string periodo
-        int horas_previstas
+        date data_entrada
+        date data_saida
+        number horas_previstas
     }
     UNIDADE_ESCAVACAO {
-        int id_unidade PK
+        number id_unidade PK
         string codigo
         string setor
         string nivel_estratigrafico
+        date data_abertura
+        date data_encerramento
     }
     ARTEFATO {
-        int id_artefato PK
+        number id_artefato PK
         string codigo_catalogo
+        string nome
+        string descricao
         string material
+        string periodo_estimado
+        date data_descoberta
+        number profundidade_cm
         string estado_conservacao
         string situacao
     }
     FRAGMENTO {
-        int id_artefato PK
-        int numero_fragmento PK
-        decimal peso_g
+        number id_artefato PK,FK
+        number numero_fragmento PK
+        number peso_g
+        number comprimento_mm
+        string descricao
         boolean localizado
     }
     ANALISE_LABORATORIAL {
-        int id_analise PK
+        number id_analise PK
         string tipo_analise
         string metodo
-        string periodo
+        date data_inicio
+        date data_fim
+        string situacao
+        number custo
     }
     ARTEFATO_ANALISE {
-        int id_artefato PK
-        int id_analise PK
+        number id_artefato PK,FK
+        number id_analise PK,FK
         string codigo_amostra
-        decimal massa_consumida_g
-        string resultado
+        number massa_consumida_g
+        string resultado_resumido
+        string conclusao
     }
     INTERVENCAO_CONSERVACAO {
-        int id_intervencao PK
+        number id_intervencao PK
         string tipo_intervencao
-        string periodo
-        decimal custo
+        date data_inicio
+        date data_fim
+        string descricao
+        string material_aplicado
+        string situacao
+        number custo
     }
     LOCAL_ARMAZENAMENTO {
-        int id_local PK
+        number id_local PK
         string codigo
         string tipo
-        decimal temperatura_c
-        decimal umidade_percentual
+        number temperatura_c
+        number umidade_percentual
+        number capacidade
     }
     CUSTODIA_ARTEFATO {
-        int id_custodia PK
-        string periodo
+        number id_custodia PK
+        date data_inicio
+        date data_fim
         string documento_movimentacao
         string motivo
     }
-    INSTITUICAO ||--o{ PESQUISADOR : vincula
-    PESQUISADOR ||--o| ARQUEOLOGO : "ISA total exclusiva"
-    PESQUISADOR ||--o| CONSERVADOR : "ISA total exclusiva"
-    PESQUISADOR ||--o| ANALISTA_LABORATORIAL : "ISA total exclusiva"
-    SITIO_ARQUEOLOGICO ||--o{ CAMPANHA : recebe
-    PESQUISADOR ||--o{ CAMPANHA : coordena
-    CAMPANHA ||--o{ PARTICIPACAO_CAMPANHA : possui
-    PESQUISADOR ||--o{ PARTICIPACAO_CAMPANHA : integra
-    CAMPANHA ||--|{ UNIDADE_ESCAVACAO : divide_se
-    UNIDADE_ESCAVACAO ||--o{ ARTEFATO : revela
-    ARTEFATO o|--o{ ARTEFATO : referencia
-    ARTEFATO ||--|{ FRAGMENTO : compoe
-    INSTITUICAO ||--o{ ANALISE_LABORATORIAL : executa
-    ARTEFATO ||--o{ ARTEFATO_ANALISE : participa
-    ANALISE_LABORATORIAL ||--o{ ARTEFATO_ANALISE : examina
-    ARTEFATO ||--o{ INTERVENCAO_CONSERVACAO : recebe
-    CONSERVADOR ||--o{ INTERVENCAO_CONSERVACAO : realiza
-    INSTITUICAO ||--o{ LOCAL_ARMAZENAMENTO : possui
-    ARTEFATO ||--o{ CUSTODIA_ARTEFATO : historico
-    INSTITUICAO ||--o{ CUSTODIA_ARTEFATO : assume
-    LOCAL_ARMAZENAMENTO o|--o{ CUSTODIA_ARTEFATO : abriga
-    PESQUISADOR ||--o{ CUSTODIA_ARTEFATO : responde
+    INSTITUICAO ||--o{ PESQUISADOR : "vincula"
+    PESQUISADOR ||--o| ARQUEOLOGO : "ISA"
+    PESQUISADOR ||--o| CONSERVADOR : "ISA"
+    PESQUISADOR ||--o| ANALISTA_LABORATORIAL : "ISA"
+    SITIO_ARQUEOLOGICO ||--o{ CAMPANHA : "recebe"
+    PESQUISADOR ||--o{ CAMPANHA : "coordena [RN08]"
+    CAMPANHA ||--o{ PARTICIPACAO_CAMPANHA : "possui"
+    PESQUISADOR ||--o{ PARTICIPACAO_CAMPANHA : "integra"
+    CAMPANHA ||--o{ UNIDADE_ESCAVACAO : "divide-se"
+    UNIDADE_ESCAVACAO ||--o{ ARTEFATO : "revela"
+    ARTEFATO |o--o{ ARTEFATO : "referência"
+    ARTEFATO ||--o{ FRAGMENTO : "compõe / identificador"
+    INSTITUICAO ||--o{ ANALISE_LABORATORIAL : "executa [RN17]"
+    ARTEFATO ||--o{ ARTEFATO_ANALISE : "participa"
+    ANALISE_LABORATORIAL ||--o{ ARTEFATO_ANALISE : "examina"
+    ARTEFATO ||--o{ INTERVENCAO_CONSERVACAO : "recebe"
+    CONSERVADOR ||--o{ INTERVENCAO_CONSERVACAO : "responsável conservador [RN20]"
+    INSTITUICAO ||--o{ LOCAL_ARMAZENAMENTO : "possui"
+    ARTEFATO ||--o{ CUSTODIA_ARTEFATO : "histórico datado"
+    INSTITUICAO ||--o{ CUSTODIA_ARTEFATO : "assume"
+    LOCAL_ARMAZENAMENTO |o--o{ CUSTODIA_ARTEFATO : "abriga [RN25]"
+    PESQUISADOR ||--o{ CUSTODIA_ARTEFATO : "responde"

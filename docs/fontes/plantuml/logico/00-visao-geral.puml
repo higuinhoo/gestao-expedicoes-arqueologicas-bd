@@ -1,0 +1,121 @@
+@startuml
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 18
+skinparam nodesep 65
+skinparam ranksep 85
+skinparam ArrowColor #3A4653
+skinparam ArrowThickness 1.3
+skinparam EntityBackgroundColor #FFFFFF
+skinparam EntityBorderColor #223447
+skinparam RelationshipBackgroundColor #F1F4F7
+skinparam RelationshipBorderColor #223447
+skinparam AttributeBackgroundColor #FFFFFF
+skinparam AttributeBorderColor #718096
+
+hide circle
+hide methods
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #FFFFFF
+skinparam classBorderColor #223447
+skinparam classFontColor #172B3A
+skinparam classHeaderBackgroundColor #EAF0F5
+entity "instituicao" as instituicao {
+  * <u>id_instituicao</u> : INT [PK]
+}
+entity "pesquisador" as pesquisador {
+  * <u>id_pesquisador</u> : INT [PK]
+  --
+  * id_instituicao : INT [FK]
+}
+entity "arqueologo" as arqueologo {
+  * <u>id_pesquisador</u> : INT [PK/FK]
+}
+entity "conservador" as conservador {
+  * <u>id_pesquisador</u> : INT [PK/FK]
+}
+entity "analista_laboratorial" as analista_laboratorial {
+  * <u>id_pesquisador</u> : INT [PK/FK]
+}
+entity "sitio_arqueologico" as sitio_arqueologico {
+  * <u>id_sitio</u> : INT [PK]
+}
+entity "campanha" as campanha {
+  * <u>id_campanha</u> : INT [PK]
+  --
+  * id_sitio : INT [FK]
+  * id_coordenador : INT [FK]
+}
+entity "participacao_campanha" as participacao_campanha {
+  * <u>id_campanha</u> : INT [PK/FK]
+  * <u>id_pesquisador</u> : INT [PK/FK]
+}
+entity "unidade_escavacao" as unidade_escavacao {
+  * <u>id_unidade</u> : INT [PK]
+  --
+  * id_campanha : INT [FK]
+}
+entity "artefato" as artefato {
+  * <u>id_artefato</u> : INT [PK]
+  --
+  * id_unidade : INT [FK]
+    id_artefato_referencia : INT [FK]
+}
+entity "fragmento" as fragmento {
+  * <u>id_artefato</u> : INT [PK/FK]
+  * <u>numero_fragmento</u> : SMALLINT [PK]
+}
+entity "analise_laboratorial" as analise_laboratorial {
+  * <u>id_analise</u> : INT [PK]
+  --
+  * id_laboratorio : INT [FK]
+}
+entity "artefato_analise" as artefato_analise {
+  * <u>id_artefato</u> : INT [PK/FK]
+  * <u>id_analise</u> : INT [PK/FK]
+}
+entity "intervencao_conservacao" as intervencao_conservacao {
+  * <u>id_intervencao</u> : INT [PK]
+  --
+  * id_artefato : INT [FK]
+  * id_conservador : INT [FK]
+}
+entity "local_armazenamento" as local_armazenamento {
+  * <u>id_local</u> : INT [PK]
+  --
+  * id_instituicao : INT [FK]
+}
+entity "custodia_artefato" as custodia_artefato {
+  * <u>id_custodia</u> : INT [PK]
+  --
+  * id_artefato : INT [FK]
+  * id_instituicao : INT [FK]
+    id_local : INT [FK]
+  * id_responsavel : INT [FK]
+}
+instituicao ||--o{ pesquisador : id_instituicao
+pesquisador ||--o| arqueologo : id_pesquisador
+pesquisador ||--o| conservador : id_pesquisador
+pesquisador ||--o| analista_laboratorial : id_pesquisador
+sitio_arqueologico ||--o{ campanha : id_sitio
+pesquisador ||--o{ campanha : id_coordenador
+campanha ||--o{ participacao_campanha : id_campanha
+pesquisador ||--o{ participacao_campanha : id_pesquisador
+campanha ||--o{ unidade_escavacao : id_campanha
+unidade_escavacao ||--o{ artefato : id_unidade
+artefato |o--o{ artefato : id_artefato_referencia
+artefato ||--o{ fragmento : id_artefato
+instituicao ||--o{ analise_laboratorial : id_laboratorio
+artefato ||--o{ artefato_analise : id_artefato
+analise_laboratorial ||--o{ artefato_analise : id_analise
+artefato ||--o{ intervencao_conservacao : id_artefato
+pesquisador ||--o{ intervencao_conservacao : id_conservador
+instituicao ||--o{ local_armazenamento : id_instituicao
+artefato ||--o{ custodia_artefato : id_artefato
+instituicao ||--o{ custodia_artefato : id_instituicao
+local_armazenamento |o--o{ custodia_artefato : id_local
+pesquisador ||--o{ custodia_artefato : id_responsavel
+@enduml
